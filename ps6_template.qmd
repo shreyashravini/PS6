@@ -17,27 +17,17 @@ include-before-body:
       breaklines
     }
 ---
-1. **ps6:** Due Sat 23rd at 5:00PM Central. Worth 100 points (80 points from questions, 10 points for correct submission and 10 points for code style) + 10 extra credit. 
 
-We use (`*`) to indicate a problem that we think might be time consuming. 
+
 
 # Steps to submit (10 points on PS6) {-}
 
 1. "This submission is my work alone and complies with the 30538 integrity
 policy." Add your initials to indicate your agreement: S S
 2. "I have uploaded the names of anyone I worked with on the problem set **[here](https://docs.google.com/forms/d/185usrCREQaUbvAXpWhChkjghdGgmAZXA3lPWpXLLsts/edit)**"  \*\*\_\_\*\* (2 point)
-3. Late coins used this pset:  Late coins left after submission: 
+3. Late coins used this pset: 0  Late coins left after submission: 1
 
-4. Before starting the problem set, make sure to read and agree to the terms of data usage for the Waze data [here](https://canvas.uchicago.edu/courses/59054/quizzes/130617).
 
-5. Knit your `ps6.qmd` as a pdf document and name it `ps6.pdf`.
-6. Push your `ps6.qmd`, `ps6.pdf`, `requirements.txt`, and all created folders (we will create three Shiny apps so you will have at least three additional folders) to your Github repo (5 points). It is fine to use Github Desktop.
-7. Submit `ps6.pdf` and also link your Github repo via Gradescope (5 points)
-8. Tag your submission in Gradescope. For the Code Style part (10 points) please tag the whole correspondingsection for the code style rubric.
-
-*Notes: see the [Quarto documentation (link)](https://quarto.org/docs/authoring/figures.html) for directions on inserting images into your knitted document.*
-
-*IMPORTANT: For the App portion of the PS, in case you can not arrive to the expected functional dashboard we will need to take a look at your `app.py` file. You can use the following code chunk template to "import" and print the content of that file. Please, don't forget to also tag the corresponding code chunk as part of your submission!*
 
 ```{python}
 #| echo: true
@@ -688,20 +678,19 @@ final_chart.show()
 
 a. 
 
-```{python}
-!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map\basic-app\Screenshot 2024-11-22 131331.png")
-```
+![Single Dropdown Menu](top_alerts_map/basic-app/App1-UI.png)
+
 
 b. 
-```{python}
-!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map\basic-app\Jam Heavy Traffic.png")
-```
+
+![Jam Heavy Traffic](top_alerts_map/basic-app/Jam-Heavy-Traffic.png)
+
 
 c. 
 Road closures due to events are most common in western Chicago, with additional significant clusters near the lakefront and northeastern areas
-```{python}
-!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map\basic-app\Road Closed Event.png")
-```
+
+![Road Closed Event](top_alerts_map/basic-app/Road-Closed-Event.png)
+
 
 d. 
 Question: "Where are the most frequent pothole hazards reported in Chicago, and what areas show the highest concentration of pothole alerts?"
@@ -720,9 +709,9 @@ This information could be valuable for:
 - Infrastructure planning and budget allocation
 - Understanding patterns of road deterioration across different neighborhoods
 
-```{python}
-!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map\basic-app\Hazard Pot Hole.png")
-```
+
+![Frequent Potholes](top_alerts_map/basic-app/Hazard-Pot-Hole.png)
+
 
 e. 
 
@@ -858,28 +847,27 @@ for hour in selected_hours:
 2.
 
 a. 
-```{python}
-!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/App 2 UI.png")
-```
+
+![App 2 UI](top_alerts_map_byhour/basic-app/App2-UI.png)
+
 
 b. 
-```{python}
-!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/jam_traffic_0800_app.png")
 
-!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/jam_traffic_1200_app.png")
+![Jam Traffic 8 AM](top_alerts_map_byhour/basic-app/jam-traffic0800-app.png)
 
-!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/jam_traffic_1700_app.png")
-```
+![Jam Traffic 12 PM](top_alerts_map_byhour/basic-app/jam-traffic1200-app.png)
+
+![Jam Traffic 5 PM](top_alerts_map_byhour/basic-app/jam-traffic1700-app.png)
+
 
 
 c. 
 The pattern suggests that road construction work is preferentially scheduled during nighttime hours (22:00), likely to minimize traffic disruption during peak daytime hours. The night construction pattern shows both more locations and higher intensity of construction activity compared to the early morning hours.
 
-```{python}
-!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/road_construction_0600.png")
 
-!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/road_construction_2200.png")
-```
+![Road Construction 6 AM](top_alerts_map_byhour/basic-app/road-construction0600.png)
+
+![Road Construction 10 PM](top_alerts_map_byhour/basic-app/road-construction2200.png)
 
 
 # App #3: Top Location by Alert Type and Hour Dashboard (20 points){-}
@@ -950,14 +938,14 @@ final_chart.save(output_path)
 
 a. 
 
-```{python}
-!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/app 3 ui.png")
-```
+
+![App 3 UI](top_alerts_map_byhour_sliderrange/basic-app/app3-ui.png)
+
 
 b. 
-```{python}
-!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/morning_traffic_jams_app.png")
-```
+
+![Morning Traffic Jams](top_alerts_map_byhour_sliderrange/basic-app/morning-traffic-jams-app.png)
+
 
 3. 
 
@@ -979,20 +967,21 @@ os.makedirs(dir_path, exist_ok=True)
     
 
 b. 
-```{python}
-!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/toggle off.png")
 
-!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/toggle on.png")
-```
+![Toggle Off](top_alerts_map_byhour_sliderrange/basic-app/toggle-off.png)
+
+![Toggle On](top_alerts_map_byhour_sliderrange/basic-app/toggle-on.png)
+
 
 
 c. 
 
-```{python}
-!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/toggle off.png")
 
-!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/toggle on.png")
-```
+![Toggle Off](top_alerts_map_byhour_sliderrange/basic-app/toggle-off.png)
+
+![Toggle On](top_alerts_map_byhour_sliderrange/basic-app/toggle-on.png)
+
+
 
 
 d.
