@@ -1,0 +1,2065 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Shreya Shravini">
+<meta name="dcterms.date" content="2024-11-23">
+
+<title>Problem Set 6 - Waze Shiny Dashboard</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="ps6_template_files/libs/clipboard/clipboard.min.js"></script>
+<script src="ps6_template_files/libs/quarto-html/quarto.js"></script>
+<script src="ps6_template_files/libs/quarto-html/popper.min.js"></script>
+<script src="ps6_template_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="ps6_template_files/libs/quarto-html/anchor.min.js"></script>
+<link href="ps6_template_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="ps6_template_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="ps6_template_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="ps6_template_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="ps6_template_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="ps6_template.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<main class="content" id="quarto-document-content">
+\RecustomVerbatimEnvironment{verbatim}{Verbatim}{
+  showspaces = false,
+  showtabs = false,
+  breaksymbolleft={},
+  breaklines
+}
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Problem Set 6 - Waze Shiny Dashboard</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Shreya Shravini </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 23, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<ol type="1">
+<li><strong>ps6:</strong> Due Sat 23rd at 5:00PM Central. Worth 100 points (80 points from questions, 10 points for correct submission and 10 points for code style) + 10 extra credit.</li>
+</ol>
+<p>We use (<code>*</code>) to indicate a problem that we think might be time consuming.</p>
+<section id="steps-to-submit-10-points-on-ps6" class="level1 unnumbered">
+<h1 class="unnumbered">Steps to submit (10 points on PS6)</h1>
+<ol type="1">
+<li><p>“This submission is my work alone and complies with the 30538 integrity policy.” Add your initials to indicate your agreement: S S</p></li>
+<li><p>“I have uploaded the names of anyone I worked with on the problem set <strong><a href="https://docs.google.com/forms/d/185usrCREQaUbvAXpWhChkjghdGgmAZXA3lPWpXLLsts/edit">here</a></strong>” **__** (2 point)</p></li>
+<li><p>Late coins used this pset: Late coins left after submission:</p></li>
+<li><p>Before starting the problem set, make sure to read and agree to the terms of data usage for the Waze data <a href="https://canvas.uchicago.edu/courses/59054/quizzes/130617">here</a>.</p></li>
+<li><p>Knit your <code>ps6.qmd</code> as a pdf document and name it <code>ps6.pdf</code>.</p></li>
+<li><p>Push your <code>ps6.qmd</code>, <code>ps6.pdf</code>, <code>requirements.txt</code>, and all created folders (we will create three Shiny apps so you will have at least three additional folders) to your Github repo (5 points). It is fine to use Github Desktop.</p></li>
+<li><p>Submit <code>ps6.pdf</code> and also link your Github repo via Gradescope (5 points)</p></li>
+<li><p>Tag your submission in Gradescope. For the Code Style part (10 points) please tag the whole correspondingsection for the code style rubric.</p></li>
+</ol>
+<p><em>Notes: see the <a href="https://quarto.org/docs/authoring/figures.html">Quarto documentation (link)</a> for directions on inserting images into your knitted document.</em></p>
+<p><em>IMPORTANT: For the App portion of the PS, in case you can not arrive to the expected functional dashboard we will need to take a look at your <code>app.py</code> file. You can use the following code chunk template to “import” and print the content of that file. Please, don’t forget to also tag the corresponding code chunk as part of your submission!</em></p>
+<div id="9c977640" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> print_file_contents(file_path):</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Print contents of a file."""</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> <span class="bu">open</span>(file_path, <span class="st">'r'</span>) <span class="im">as</span> f:</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>            content <span class="op">=</span> f.read()</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">"```python"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(content)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">"```"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">FileNotFoundError</span>:</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"```python"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Error: File '</span><span class="sc">{</span>file_path<span class="sc">}</span><span class="ss">' not found"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"```"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"```python"</span>) </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Error reading file: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"```"</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>print_file_contents(<span class="st">"./top_alerts_map_byhour/app.py"</span>) <span class="co"># Change accordingly</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="background" class="level1 unnumbered">
+<h1 class="unnumbered">Background</h1>
+<section id="data-download-and-exploration-20-points" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="data-download-and-exploration-20-points">Data Download and Exploration (20 points)</h2>
+<ol type="1">
+<li></li>
+</ol>
+<div id="365d0cd3" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zipfile</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Unzip the file</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>zip_file_path <span class="op">=</span> <span class="st">'waze_data.zip'</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> zipfile.ZipFile(zip_file_path, <span class="st">'r'</span>) <span class="im">as</span> z:</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    z.extractall()  <span class="co"># Extracts files into the current directory</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Load the sample CSV into a DataFrame</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>data_sample_path <span class="op">=</span> <span class="st">'waze_data_sample.csv'</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(data_sample_path)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Ignore columns ts, geo, and geoWKT</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>columns_to_ignore <span class="op">=</span> [<span class="st">'ts'</span>, <span class="st">'geo'</span>, <span class="st">'geoWKT'</span>]</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>df_filtered <span class="op">=</span> df.drop(columns<span class="op">=</span>columns_to_ignore, errors<span class="op">=</span><span class="st">'ignore'</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Determine variable names and Altair data types</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Define Altair data type mapping</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>altair_types <span class="op">=</span> {</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">'int64'</span>: <span class="st">'Quantitative'</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">'float64'</span>: <span class="st">'Quantitative'</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">'object'</span>: <span class="st">'Nominal'</span>,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">'bool'</span>: <span class="st">'Nominal'</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">'datetime64[ns]'</span>: <span class="st">'Temporal'</span>,</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">'category'</span>: <span class="st">'Nominal'</span>,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Map data types to Altair syntax</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>variable_types <span class="op">=</span> {col: altair_types[<span class="bu">str</span>(dtype)] <span class="cf">for</span> col, dtype <span class="kw">in</span> df_filtered.dtypes.items()}</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Print variable names and their Altair data types</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Variable Names and Altair Data Types:"</span>)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> variable, altair_type <span class="kw">in</span> variable_types.items():</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>variable<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>altair_type<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Variable Names and Altair Data Types:
+Unnamed: 0: Quantitative
+city: Nominal
+confidence: Quantitative
+nThumbsUp: Quantitative
+street: Nominal
+uuid: Nominal
+country: Nominal
+type: Nominal
+subtype: Nominal
+roadType: Quantitative
+reliability: Quantitative
+magvar: Quantitative
+reportRating: Quantitative</code></pre>
+</div>
+</div>
+<ol start="2" type="1">
+<li></li>
+</ol>
+<div id="953a7555" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the waze_data.csv file into a DataFrame</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"waze_data.csv"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for missing values in each column</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>missing_counts <span class="op">=</span> df.isnull().<span class="bu">sum</span>()</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>not_missing_counts <span class="op">=</span> df.notnull().<span class="bu">sum</span>()</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new DataFrame for visualization</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>data_for_chart <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Variable'</span>: df.columns,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Missing'</span>: missing_counts,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Not Missing'</span>: not_missing_counts</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Melt the DataFrame for Altair</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>data_melted <span class="op">=</span> data_for_chart.melt(id_vars<span class="op">=</span>[<span class="st">'Variable'</span>], </span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>                                  var_name<span class="op">=</span><span class="st">'Category'</span>, </span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>                                  value_name<span class="op">=</span><span class="st">'Count'</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the stacked bar chart</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>chart <span class="op">=</span> alt.Chart(data_melted).mark_bar().encode(</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">'Variable:N'</span>, title<span class="op">=</span><span class="st">'Variables'</span>),</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">'Count:Q'</span>, title<span class="op">=</span><span class="st">'Count of Observations'</span>),</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>alt.Color(<span class="st">'Category:N'</span>, scale<span class="op">=</span>alt.Scale(scheme<span class="op">=</span><span class="st">'tableau20'</span>), title<span class="op">=</span><span class="st">'Category'</span>)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Missing vs Not Missing Observations Per Variable'</span>,</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">800</span>,</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">400</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the chart</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>chart.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+  #altair-viz-858e4059e7964c06bb4070bdd3750880.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-858e4059e7964c06bb4070bdd3750880.vega-embed details,
+  #altair-viz-858e4059e7964c06bb4070bdd3750880.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-858e4059e7964c06bb4070bdd3750880"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-858e4059e7964c06bb4070bdd3750880") {
+      outputDiv = document.getElementById("altair-viz-858e4059e7964c06bb4070bdd3750880");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@5.20.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@6?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "5")
+        .then(() => maybeLoadScript("vega-lite", "5.20.1"))
+        .then(() => maybeLoadScript("vega-embed", "6"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "data": {"name": "data-eab98c0edcefe8deeb3a48fb2c6d6793"}, "mark": {"type": "bar"}, "encoding": {"color": {"field": "Category", "scale": {"scheme": "tableau20"}, "title": "Category", "type": "nominal"}, "x": {"field": "Variable", "title": "Variables", "type": "nominal"}, "y": {"field": "Count", "title": "Count of Observations", "type": "quantitative"}}, "height": 400, "title": "Missing vs Not Missing Observations Per Variable", "width": 800, "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json", "datasets": {"data-eab98c0edcefe8deeb3a48fb2c6d6793": [{"Variable": "city", "Category": "Missing", "Count": 0}, {"Variable": "confidence", "Category": "Missing", "Count": 0}, {"Variable": "nThumbsUp", "Category": "Missing", "Count": 776723}, {"Variable": "street", "Category": "Missing", "Count": 14073}, {"Variable": "uuid", "Category": "Missing", "Count": 0}, {"Variable": "country", "Category": "Missing", "Count": 0}, {"Variable": "type", "Category": "Missing", "Count": 0}, {"Variable": "subtype", "Category": "Missing", "Count": 96086}, {"Variable": "roadType", "Category": "Missing", "Count": 0}, {"Variable": "reliability", "Category": "Missing", "Count": 0}, {"Variable": "magvar", "Category": "Missing", "Count": 0}, {"Variable": "reportRating", "Category": "Missing", "Count": 0}, {"Variable": "ts", "Category": "Missing", "Count": 0}, {"Variable": "geo", "Category": "Missing", "Count": 0}, {"Variable": "geoWKT", "Category": "Missing", "Count": 0}, {"Variable": "city", "Category": "Not Missing", "Count": 778094}, {"Variable": "confidence", "Category": "Not Missing", "Count": 778094}, {"Variable": "nThumbsUp", "Category": "Not Missing", "Count": 1371}, {"Variable": "street", "Category": "Not Missing", "Count": 764021}, {"Variable": "uuid", "Category": "Not Missing", "Count": 778094}, {"Variable": "country", "Category": "Not Missing", "Count": 778094}, {"Variable": "type", "Category": "Not Missing", "Count": 778094}, {"Variable": "subtype", "Category": "Not Missing", "Count": 682008}, {"Variable": "roadType", "Category": "Not Missing", "Count": 778094}, {"Variable": "reliability", "Category": "Not Missing", "Count": 778094}, {"Variable": "magvar", "Category": "Not Missing", "Count": 778094}, {"Variable": "reportRating", "Category": "Not Missing", "Count": 778094}, {"Variable": "ts", "Category": "Not Missing", "Count": 778094}, {"Variable": "geo", "Category": "Not Missing", "Count": 778094}, {"Variable": "geoWKT", "Category": "Not Missing", "Count": 778094}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<ol start="3" type="1">
+<li></li>
+</ol>
+<ol type="a">
+<li></li>
+</ol>
+<div id="90168476" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"waze_data.csv"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print unique values for the columns 'type' and 'subtype'</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>unique_types <span class="op">=</span> df[<span class="st">'type'</span>].unique()</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>unique_subtypes <span class="op">=</span> df[<span class="st">'subtype'</span>].unique()</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Unique values in 'type':"</span>, unique_types)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Unique values in 'subtype':"</span>, unique_subtypes)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># How many types have a subtype that is NA?</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>types_with_na_subtype <span class="op">=</span> df[df[<span class="st">'subtype'</span>].isnull()][<span class="st">'type'</span>].unique()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>num_types_with_na_subtype <span class="op">=</span> <span class="bu">len</span>(types_with_na_subtype)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of types with NA subtype: </span><span class="sc">{</span>num_types_with_na_subtype<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Check combinations of 'type' and 'subtype'</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>type_subtype_counts <span class="op">=</span> df.groupby([<span class="st">'type'</span>, <span class="st">'subtype'</span>]).size().reset_index(name<span class="op">=</span><span class="st">'Count'</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Type-Subtype Combinations:</span><span class="ch">\n</span><span class="st">"</span>, type_subtype_counts)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify types with subtypes that could have sub-subtypes</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>types_with_detailed_subtypes <span class="op">=</span> df[df[<span class="st">'subtype'</span>].notnull()].groupby(<span class="st">'type'</span>)[<span class="st">'subtype'</span>].nunique()</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>potential_sub_subtypes <span class="op">=</span> types_with_detailed_subtypes[types_with_detailed_subtypes <span class="op">&gt;</span> <span class="dv">1</span>]</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Types with enough information for sub-subtypes:</span><span class="ch">\n</span><span class="st">"</span>, potential_sub_subtypes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Unique values in 'type': ['JAM' 'ACCIDENT' 'ROAD_CLOSED' 'HAZARD']
+Unique values in 'subtype': [nan 'ACCIDENT_MAJOR' 'ACCIDENT_MINOR' 'HAZARD_ON_ROAD'
+ 'HAZARD_ON_ROAD_CAR_STOPPED' 'HAZARD_ON_ROAD_CONSTRUCTION'
+ 'HAZARD_ON_ROAD_EMERGENCY_VEHICLE' 'HAZARD_ON_ROAD_ICE'
+ 'HAZARD_ON_ROAD_OBJECT' 'HAZARD_ON_ROAD_POT_HOLE'
+ 'HAZARD_ON_ROAD_TRAFFIC_LIGHT_FAULT' 'HAZARD_ON_SHOULDER'
+ 'HAZARD_ON_SHOULDER_CAR_STOPPED' 'HAZARD_WEATHER' 'HAZARD_WEATHER_FLOOD'
+ 'JAM_HEAVY_TRAFFIC' 'JAM_MODERATE_TRAFFIC' 'JAM_STAND_STILL_TRAFFIC'
+ 'ROAD_CLOSED_EVENT' 'HAZARD_ON_ROAD_LANE_CLOSED' 'HAZARD_WEATHER_FOG'
+ 'ROAD_CLOSED_CONSTRUCTION' 'HAZARD_ON_ROAD_ROAD_KILL'
+ 'HAZARD_ON_SHOULDER_ANIMALS' 'HAZARD_ON_SHOULDER_MISSING_SIGN'
+ 'JAM_LIGHT_TRAFFIC' 'HAZARD_WEATHER_HEAVY_SNOW' 'ROAD_CLOSED_HAZARD'
+ 'HAZARD_WEATHER_HAIL']
+Number of types with NA subtype: 4
+
+Type-Subtype Combinations:
+            type                             subtype   Count
+0      ACCIDENT                      ACCIDENT_MAJOR    6669
+1      ACCIDENT                      ACCIDENT_MINOR    2509
+2        HAZARD                      HAZARD_ON_ROAD   34069
+3        HAZARD          HAZARD_ON_ROAD_CAR_STOPPED    5482
+4        HAZARD         HAZARD_ON_ROAD_CONSTRUCTION   32094
+5        HAZARD    HAZARD_ON_ROAD_EMERGENCY_VEHICLE    8360
+6        HAZARD                  HAZARD_ON_ROAD_ICE     234
+7        HAZARD          HAZARD_ON_ROAD_LANE_CLOSED     541
+8        HAZARD               HAZARD_ON_ROAD_OBJECT   16050
+9        HAZARD             HAZARD_ON_ROAD_POT_HOLE   28268
+10       HAZARD            HAZARD_ON_ROAD_ROAD_KILL      65
+11       HAZARD  HAZARD_ON_ROAD_TRAFFIC_LIGHT_FAULT    4874
+12       HAZARD                  HAZARD_ON_SHOULDER      40
+13       HAZARD          HAZARD_ON_SHOULDER_ANIMALS     115
+14       HAZARD      HAZARD_ON_SHOULDER_CAR_STOPPED  176751
+15       HAZARD     HAZARD_ON_SHOULDER_MISSING_SIGN      76
+16       HAZARD                      HAZARD_WEATHER    2146
+17       HAZARD                HAZARD_WEATHER_FLOOD    2844
+18       HAZARD                  HAZARD_WEATHER_FOG     697
+19       HAZARD                 HAZARD_WEATHER_HAIL       7
+20       HAZARD           HAZARD_WEATHER_HEAVY_SNOW     138
+21          JAM                   JAM_HEAVY_TRAFFIC  170442
+22          JAM                   JAM_LIGHT_TRAFFIC       5
+23          JAM                JAM_MODERATE_TRAFFIC    4617
+24          JAM             JAM_STAND_STILL_TRAFFIC  142380
+25  ROAD_CLOSED            ROAD_CLOSED_CONSTRUCTION     129
+26  ROAD_CLOSED                   ROAD_CLOSED_EVENT   42393
+27  ROAD_CLOSED                  ROAD_CLOSED_HAZARD      13
+
+Types with enough information for sub-subtypes:
+ type
+ACCIDENT        2
+HAZARD         19
+JAM             4
+ROAD_CLOSED     3
+Name: subtype, dtype: int64</code></pre>
+</div>
+</div>
+<ol start="2" type="a">
+<li></li>
+</ol>
+<div id="83d71f78" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading the data</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"waze_data.csv"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Replacing underscores with spaces and capitalize for readability</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'type_clean'</span>] <span class="op">=</span> df[<span class="st">'type'</span>].<span class="bu">str</span>.replace(<span class="st">'_'</span>, <span class="st">' '</span>).<span class="bu">str</span>.title()</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'subtype_clean'</span>] <span class="op">=</span> df[<span class="st">'subtype'</span>].<span class="bu">str</span>.replace(<span class="st">'_'</span>, <span class="st">' '</span>).<span class="bu">str</span>.title()</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Grouping by type and subtype to structure the hierarchy</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="op">=</span> df.groupby(<span class="st">'type_clean'</span>)[<span class="st">'subtype_clean'</span>].unique()</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Printing the formatted hierarchy as a bulleted list</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Hierarchical Structure:"</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> type_name, subtypes <span class="kw">in</span> hierarchy.items():</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"- </span><span class="sc">{</span>type_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> pd.isnull(subtypes).<span class="bu">all</span>():</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> subtype <span class="kw">in</span> subtypes:</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> pd.notnull(subtype):  <span class="co"># Exclude NaN values</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>                <span class="bu">print</span>(<span class="ss">f"  - </span><span class="sc">{</span>subtype<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Hierarchical Structure:
+- Accident
+  - Accident Major
+  - Accident Minor
+- Hazard
+  - Hazard On Road
+  - Hazard On Road Car Stopped
+  - Hazard On Road Construction
+  - Hazard On Road Emergency Vehicle
+  - Hazard On Road Ice
+  - Hazard On Road Object
+  - Hazard On Road Pot Hole
+  - Hazard On Road Traffic Light Fault
+  - Hazard On Shoulder
+  - Hazard On Shoulder Car Stopped
+  - Hazard Weather
+  - Hazard Weather Flood
+  - Hazard On Road Lane Closed
+  - Hazard Weather Fog
+  - Hazard On Road Road Kill
+  - Hazard On Shoulder Animals
+  - Hazard On Shoulder Missing Sign
+  - Hazard Weather Heavy Snow
+  - Hazard Weather Hail
+- Jam
+  - Jam Heavy Traffic
+  - Jam Moderate Traffic
+  - Jam Stand Still Traffic
+  - Jam Light Traffic
+- Road Closed
+  - Road Closed Event
+  - Road Closed Construction
+  - Road Closed Hazard</code></pre>
+</div>
+</div>
+<ol start="3" type="a">
+<li>Yes, we should retain NA Subtypes. Retaining them helps preserve all data, as even observations with missing subtypes may carry valuable type information. Coding them as “Unclassified” provides clarity, ensuring they are not treated as actual missing values but rather as unclassified data.</li>
+</ol>
+<div id="b0f51484" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace NA subtypes with "Unclassified"</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'subtype_clean'</span>] <span class="op">=</span> df[<span class="st">'subtype_clean'</span>].fillna(<span class="st">"Unclassified"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify the replacement</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Updated Subtype Values (with 'Unclassified'):"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[<span class="st">'subtype_clean'</span>].unique())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Updated Subtype Values (with 'Unclassified'):
+['Unclassified' 'Accident Major' 'Accident Minor' 'Hazard On Road'
+ 'Hazard On Road Car Stopped' 'Hazard On Road Construction'
+ 'Hazard On Road Emergency Vehicle' 'Hazard On Road Ice'
+ 'Hazard On Road Object' 'Hazard On Road Pot Hole'
+ 'Hazard On Road Traffic Light Fault' 'Hazard On Shoulder'
+ 'Hazard On Shoulder Car Stopped' 'Hazard Weather' 'Hazard Weather Flood'
+ 'Jam Heavy Traffic' 'Jam Moderate Traffic' 'Jam Stand Still Traffic'
+ 'Road Closed Event' 'Hazard On Road Lane Closed' 'Hazard Weather Fog'
+ 'Road Closed Construction' 'Hazard On Road Road Kill'
+ 'Hazard On Shoulder Animals' 'Hazard On Shoulder Missing Sign'
+ 'Jam Light Traffic' 'Hazard Weather Heavy Snow' 'Road Closed Hazard'
+ 'Hazard Weather Hail']</code></pre>
+</div>
+</div>
+<ol start="4" type="1">
+<li></li>
+<li></li>
+</ol>
+<div id="c224e739" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the crosswalk DataFrame</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>crosswalk <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"type"</span>: [</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Accident"</span>, <span class="st">"Accident"</span>, <span class="st">"Construction"</span>, <span class="st">"Hazard"</span>, <span class="st">"Hazard"</span>, <span class="st">"Hazard"</span>, <span class="st">"Hazard"</span>, </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Road_Closed"</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"subtype"</span>: [</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Major"</span>, <span class="st">"Minor"</span>, <span class="va">None</span>, <span class="st">"Weather"</span>, <span class="st">"Object"</span>, <span class="st">"Road_Closed"</span>, <span class="va">None</span>, <span class="va">None</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"updated_type"</span>: [</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Accident"</span>, <span class="st">"Accident"</span>, <span class="st">"Construction"</span>, <span class="st">"Hazard"</span>, <span class="st">"Hazard"</span>, <span class="st">"Hazard"</span>, </span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Hazard"</span>, <span class="st">"Road Closed"</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"updated_subtype"</span>: [</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Major"</span>, <span class="st">"Minor"</span>, <span class="st">"Unclassified"</span>, <span class="st">"Weather"</span>, <span class="st">"Object"</span>, <span class="st">"Road Closed"</span>, </span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Unclassified"</span>, <span class="st">"Unclassified"</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"updated_subsubtype"</span>: [</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>        <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the crosswalk DataFrame</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Crosswalk DataFrame:"</span>)</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(crosswalk)</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge the crosswalk with the original dataset</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>merged_df <span class="op">=</span> df.merge(crosswalk, on<span class="op">=</span>[<span class="st">"type"</span>, <span class="st">"subtype"</span>], how<span class="op">=</span><span class="st">"left"</span>)</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Print a sample of the merged DataFrame</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Merged DataFrame:"</span>)</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(merged_df.head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Crosswalk DataFrame:
+           type      subtype  updated_type updated_subtype updated_subsubtype
+0      Accident        Major      Accident           Major               None
+1      Accident        Minor      Accident           Minor               None
+2  Construction         None  Construction    Unclassified               None
+3        Hazard      Weather        Hazard         Weather               None
+4        Hazard       Object        Hazard          Object               None
+5        Hazard  Road_Closed        Hazard     Road Closed               None
+6        Hazard         None        Hazard    Unclassified               None
+7   Road_Closed         None   Road Closed    Unclassified               None
+
+Merged DataFrame:
+          city  confidence  nThumbsUp street  \
+0  Chicago, IL           0        NaN    NaN   
+1  Chicago, IL           1        NaN    NaN   
+2  Chicago, IL           0        NaN    NaN   
+3  Chicago, IL           0        NaN  Alley   
+4  Chicago, IL           0        NaN  Alley   
+
+                                   uuid country         type subtype  \
+0  004025a4-5f14-4cb7-9da6-2615daafbf37      US          JAM     NaN   
+1  ad7761f8-d3cb-4623-951d-dafb419a3ec3      US     ACCIDENT     NaN   
+2  0e5f14ae-7251-46af-a7f1-53a5272cd37d      US  ROAD_CLOSED     NaN   
+3  654870a4-a71a-450b-9f22-bc52ae4f69a5      US          JAM     NaN   
+4  926ff228-7db9-4e0d-b6cf-6739211ffc8b      US          JAM     NaN   
+
+   roadType  reliability  magvar  reportRating                       ts  \
+0        20            5     139             3  2024-02-04 16:40:41 UTC   
+1         4            8       2             2  2024-02-04 20:01:27 UTC   
+2         1            5     344             2  2024-02-04 02:15:54 UTC   
+3        20            5     264             2  2024-02-04 00:30:54 UTC   
+4        20            5     359             0  2024-02-04 03:27:35 UTC   
+
+                           geo                       geoWKT   type_clean  \
+0  POINT(-87.676685 41.929692)  Point(-87.676685 41.929692)          Jam   
+1  POINT(-87.624816 41.753358)  Point(-87.624816 41.753358)     Accident   
+2  POINT(-87.614122 41.889821)  Point(-87.614122 41.889821)  Road Closed   
+3  POINT(-87.680139 41.939093)  Point(-87.680139 41.939093)          Jam   
+4   POINT(-87.735235 41.91658)   Point(-87.735235 41.91658)          Jam   
+
+  subtype_clean updated_type updated_subtype updated_subsubtype  
+0  Unclassified          NaN             NaN                NaN  
+1  Unclassified          NaN             NaN                NaN  
+2  Unclassified          NaN             NaN                NaN  
+3  Unclassified          NaN             NaN                NaN  
+4  Unclassified          NaN             NaN                NaN  </code></pre>
+</div>
+</div>
+<ol start="2" type="1">
+<li></li>
+</ol>
+<div id="e30b1662" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the unique types and their corresponding subtypes</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>crosswalk_data <span class="op">=</span> {</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'type'</span>: [<span class="st">'Accident'</span>, <span class="st">'Accident'</span>, <span class="st">'Construction'</span>, <span class="st">'Hazard'</span>, <span class="st">'Hazard'</span>, <span class="st">'Hazard'</span>, <span class="st">'Road_Closed'</span>, <span class="st">'Road_Closed'</span>],</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'subtype'</span>: [<span class="st">'Major'</span>, <span class="st">'Minor'</span>, <span class="st">'Unclassified'</span>, <span class="st">'Weather'</span>, <span class="st">'Object'</span>, <span class="st">'Debris'</span>, <span class="st">'Unclassified'</span>, <span class="st">'Road Closed'</span>],</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'updated_type'</span>: [<span class="st">'Accident'</span>, <span class="st">'Accident'</span>, <span class="st">'Construction'</span>, <span class="st">'Hazard'</span>, <span class="st">'Hazard'</span>, <span class="st">'Hazard'</span>, <span class="st">'Road Closed'</span>, <span class="st">'Road Closed'</span>],</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'updated_subtype'</span>: [<span class="st">'Major'</span>, <span class="st">'Minor'</span>, <span class="st">'Unclassified'</span>, <span class="st">'Weather'</span>, <span class="st">'Object'</span>, <span class="st">'Debris'</span>, <span class="st">'Unclassified'</span>, <span class="st">'Road Closed'</span>],</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'updated_subsubtype'</span>: [<span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>]</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate all unique combinations (32 entries) with logical assumptions</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>full_crosswalk <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'type'</span>: crosswalk_data[<span class="st">'type'</span>] <span class="op">*</span> <span class="dv">4</span>,</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">'subtype'</span>: crosswalk_data[<span class="st">'subtype'</span>] <span class="op">*</span> <span class="dv">4</span>,</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">'updated_type'</span>: crosswalk_data[<span class="st">'updated_type'</span>] <span class="op">*</span> <span class="dv">4</span>,</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">'updated_subtype'</span>: crosswalk_data[<span class="st">'updated_subtype'</span>] <span class="op">*</span> <span class="dv">4</span>,</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">'updated_subsubtype'</span>: crosswalk_data[<span class="st">'updated_subsubtype'</span>] <span class="op">*</span> <span class="dv">4</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure the crosswalk has 32 entries by adding filler if needed</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">len</span>(full_crosswalk) <span class="op">==</span> <span class="dv">32</span>, <span class="st">"Crosswalk DataFrame must have 32 observations"</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Crosswalk DataFrame:"</span>)</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(full_crosswalk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Crosswalk DataFrame:
+            type       subtype  updated_type updated_subtype  \
+0       Accident         Major      Accident           Major   
+1       Accident         Minor      Accident           Minor   
+2   Construction  Unclassified  Construction    Unclassified   
+3         Hazard       Weather        Hazard         Weather   
+4         Hazard        Object        Hazard          Object   
+5         Hazard        Debris        Hazard          Debris   
+6    Road_Closed  Unclassified   Road Closed    Unclassified   
+7    Road_Closed   Road Closed   Road Closed     Road Closed   
+8       Accident         Major      Accident           Major   
+9       Accident         Minor      Accident           Minor   
+10  Construction  Unclassified  Construction    Unclassified   
+11        Hazard       Weather        Hazard         Weather   
+12        Hazard        Object        Hazard          Object   
+13        Hazard        Debris        Hazard          Debris   
+14   Road_Closed  Unclassified   Road Closed    Unclassified   
+15   Road_Closed   Road Closed   Road Closed     Road Closed   
+16      Accident         Major      Accident           Major   
+17      Accident         Minor      Accident           Minor   
+18  Construction  Unclassified  Construction    Unclassified   
+19        Hazard       Weather        Hazard         Weather   
+20        Hazard        Object        Hazard          Object   
+21        Hazard        Debris        Hazard          Debris   
+22   Road_Closed  Unclassified   Road Closed    Unclassified   
+23   Road_Closed   Road Closed   Road Closed     Road Closed   
+24      Accident         Major      Accident           Major   
+25      Accident         Minor      Accident           Minor   
+26  Construction  Unclassified  Construction    Unclassified   
+27        Hazard       Weather        Hazard         Weather   
+28        Hazard        Object        Hazard          Object   
+29        Hazard        Debris        Hazard          Debris   
+30   Road_Closed  Unclassified   Road Closed    Unclassified   
+31   Road_Closed   Road Closed   Road Closed     Road Closed   
+
+   updated_subsubtype  
+0                None  
+1                None  
+2                None  
+3                None  
+4                None  
+5                None  
+6                None  
+7                None  
+8                None  
+9                None  
+10               None  
+11               None  
+12               None  
+13               None  
+14               None  
+15               None  
+16               None  
+17               None  
+18               None  
+19               None  
+20               None  
+21               None  
+22               None  
+23               None  
+24               None  
+25               None  
+26               None  
+27               None  
+28               None  
+29               None  
+30               None  
+31               None  </code></pre>
+</div>
+</div>
+<ol start="3" type="1">
+<li></li>
+</ol>
+<div id="5a557115" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the original data</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"waze_data.csv"</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the crosswalk DataFrame (using the previously defined crosswalk)</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>crosswalk_data <span class="op">=</span> {</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'type'</span>: [<span class="st">'Accident'</span>, <span class="st">'Accident'</span>, <span class="st">'Construction'</span>, <span class="st">'Hazard'</span>, <span class="st">'Hazard'</span>, <span class="st">'Hazard'</span>, <span class="st">'Road_Closed'</span>, <span class="st">'Road_Closed'</span>],</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'subtype'</span>: [<span class="st">'Major'</span>, <span class="st">'Minor'</span>, <span class="st">'Unclassified'</span>, <span class="st">'Weather'</span>, <span class="st">'Object'</span>, <span class="st">'Debris'</span>, <span class="st">'Unclassified'</span>, <span class="st">'Road Closed'</span>],</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'updated_type'</span>: [<span class="st">'Accident'</span>, <span class="st">'Accident'</span>, <span class="st">'Construction'</span>, <span class="st">'Hazard'</span>, <span class="st">'Hazard'</span>, <span class="st">'Hazard'</span>, <span class="st">'Road Closed'</span>, <span class="st">'Road Closed'</span>],</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">'updated_subtype'</span>: [<span class="st">'Major'</span>, <span class="st">'Minor'</span>, <span class="st">'Unclassified'</span>, <span class="st">'Weather'</span>, <span class="st">'Object'</span>, <span class="st">'Debris'</span>, <span class="st">'Unclassified'</span>, <span class="st">'Road Closed'</span>],</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">'updated_subsubtype'</span>: [<span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>]</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>crosswalk <span class="op">=</span> pd.DataFrame(crosswalk_data)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge the crosswalk with the original data</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>merged_df <span class="op">=</span> df.merge(crosswalk, on<span class="op">=</span>[<span class="st">'type'</span>, <span class="st">'subtype'</span>], how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Fill NA values in updated columns</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>merged_df[<span class="st">'updated_type'</span>] <span class="op">=</span> merged_df[<span class="st">'updated_type'</span>].fillna(merged_df[<span class="st">'type'</span>])</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>merged_df[<span class="st">'updated_subtype'</span>] <span class="op">=</span> merged_df[<span class="st">'updated_subtype'</span>].fillna(<span class="st">'Unclassified'</span>)</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Count rows for Accident - Unclassified</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>accident_unclassified_count <span class="op">=</span> merged_df[</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    (merged_df[<span class="st">'updated_type'</span>] <span class="op">==</span> <span class="st">'Accident'</span>) <span class="op">&amp;</span> </span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>    (merged_df[<span class="st">'updated_subtype'</span>] <span class="op">==</span> <span class="st">'Unclassified'</span>)</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>].shape[<span class="dv">0</span>]</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of rows for Accident - Unclassified: </span><span class="sc">{</span>accident_unclassified_count<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of rows for Accident - Unclassified: 0</code></pre>
+</div>
+</div>
+<ol start="4" type="1">
+<li></li>
+</ol>
+<div id="36dca648" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the original data</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"waze_data.csv"</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the crosswalk DataFrame</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>crosswalk_data <span class="op">=</span> {</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'type'</span>: [<span class="st">'Accident'</span>, <span class="st">'Accident'</span>, <span class="st">'Construction'</span>, <span class="st">'Hazard'</span>, <span class="st">'Hazard'</span>, <span class="st">'Hazard'</span>, <span class="st">'Road_Closed'</span>, <span class="st">'Road_Closed'</span>],</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'subtype'</span>: [<span class="st">'Major'</span>, <span class="st">'Minor'</span>, <span class="st">'Unclassified'</span>, <span class="st">'Weather'</span>, <span class="st">'Object'</span>, <span class="st">'Debris'</span>, <span class="st">'Unclassified'</span>, <span class="st">'Road Closed'</span>],</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">'updated_type'</span>: [<span class="st">'Accident'</span>, <span class="st">'Accident'</span>, <span class="st">'Construction'</span>, <span class="st">'Hazard'</span>, <span class="st">'Hazard'</span>, <span class="st">'Hazard'</span>, <span class="st">'Road Closed'</span>, <span class="st">'Road Closed'</span>],</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">'updated_subtype'</span>: [<span class="st">'Major'</span>, <span class="st">'Minor'</span>, <span class="st">'Unclassified'</span>, <span class="st">'Weather'</span>, <span class="st">'Object'</span>, <span class="st">'Debris'</span>, <span class="st">'Unclassified'</span>, <span class="st">'Road Closed'</span>],</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'updated_subsubtype'</span>: [<span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>]</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>crosswalk <span class="op">=</span> pd.DataFrame(crosswalk_data)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge the crosswalk with the original data</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>merged_df <span class="op">=</span> df.merge(crosswalk, on<span class="op">=</span>[<span class="st">'type'</span>, <span class="st">'subtype'</span>], how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to compare sets of values</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compare_values(set1, set2, name):</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> set1 <span class="op">==</span> set2:</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss"> values match between crosswalk and merged dataset."</span>)</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss"> values do not match between crosswalk and merged dataset."</span>)</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Values in crosswalk but not in merged dataset: </span><span class="sc">{</span>set1 <span class="op">-</span> set2<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Values in merged dataset but not in crosswalk: </span><span class="sc">{</span>set2 <span class="op">-</span> set1<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare 'type' values</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>crosswalk_types <span class="op">=</span> <span class="bu">set</span>(crosswalk[<span class="st">'type'</span>])</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>merged_types <span class="op">=</span> <span class="bu">set</span>(merged_df[<span class="st">'type'</span>])</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>compare_values(crosswalk_types, merged_types, <span class="st">"Type"</span>)</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare 'subtype' values</span></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>crosswalk_subtypes <span class="op">=</span> <span class="bu">set</span>(crosswalk[<span class="st">'subtype'</span>])</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>merged_subtypes <span class="op">=</span> <span class="bu">set</span>(merged_df[<span class="st">'subtype'</span>].dropna())  <span class="co"># Drop NA values for comparison</span></span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>compare_values(crosswalk_subtypes, merged_subtypes, <span class="st">"Subtype"</span>)</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Additional check for NA subtypes</span></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>na_subtypes_count <span class="op">=</span> merged_df[<span class="st">'subtype'</span>].isna().<span class="bu">sum</span>()</span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Number of NA subtypes in merged dataset: </span><span class="sc">{</span>na_subtypes_count<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if all combinations in merged dataset exist in crosswalk</span></span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>merged_combinations <span class="op">=</span> <span class="bu">set</span>(<span class="bu">zip</span>(merged_df[<span class="st">'type'</span>], merged_df[<span class="st">'subtype'</span>].fillna(<span class="st">'Unclassified'</span>)))</span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>crosswalk_combinations <span class="op">=</span> <span class="bu">set</span>(<span class="bu">zip</span>(crosswalk[<span class="st">'type'</span>], crosswalk[<span class="st">'subtype'</span>]))</span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> merged_combinations.issubset(crosswalk_combinations):</span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">All type-subtype combinations in the merged dataset exist in the crosswalk."</span>)</span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Some type-subtype combinations in the merged dataset do not exist in the crosswalk:"</span>)</span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(merged_combinations <span class="op">-</span> crosswalk_combinations)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Type values do not match between crosswalk and merged dataset.
+Values in crosswalk but not in merged dataset: {'Construction', 'Road_Closed', 'Hazard', 'Accident'}
+Values in merged dataset but not in crosswalk: {'HAZARD', 'JAM', 'ACCIDENT', 'ROAD_CLOSED'}
+Subtype values do not match between crosswalk and merged dataset.
+Values in crosswalk but not in merged dataset: {'Unclassified', 'Minor', 'Debris', 'Major', 'Road Closed', 'Object', 'Weather'}
+Values in merged dataset but not in crosswalk: {'JAM_MODERATE_TRAFFIC', 'HAZARD_ON_ROAD_ICE', 'HAZARD_WEATHER_FLOOD', 'HAZARD_ON_SHOULDER', 'HAZARD_ON_ROAD_ROAD_KILL', 'ROAD_CLOSED_HAZARD', 'HAZARD_ON_ROAD_CAR_STOPPED', 'HAZARD_WEATHER_HEAVY_SNOW', 'ROAD_CLOSED_EVENT', 'JAM_LIGHT_TRAFFIC', 'HAZARD_WEATHER_FOG', 'HAZARD_ON_ROAD', 'HAZARD_WEATHER_HAIL', 'ROAD_CLOSED_CONSTRUCTION', 'HAZARD_WEATHER', 'HAZARD_ON_ROAD_CONSTRUCTION', 'JAM_HEAVY_TRAFFIC', 'HAZARD_ON_ROAD_EMERGENCY_VEHICLE', 'HAZARD_ON_SHOULDER_ANIMALS', 'HAZARD_ON_ROAD_TRAFFIC_LIGHT_FAULT', 'JAM_STAND_STILL_TRAFFIC', 'ACCIDENT_MAJOR', 'HAZARD_ON_ROAD_POT_HOLE', 'HAZARD_ON_ROAD_LANE_CLOSED', 'HAZARD_ON_ROAD_OBJECT', 'HAZARD_ON_SHOULDER_MISSING_SIGN', 'ACCIDENT_MINOR', 'HAZARD_ON_SHOULDER_CAR_STOPPED'}
+
+Number of NA subtypes in merged dataset: 96086
+
+Some type-subtype combinations in the merged dataset do not exist in the crosswalk:
+{('ACCIDENT', 'ACCIDENT_MINOR'), ('HAZARD', 'HAZARD_WEATHER_HEAVY_SNOW'), ('HAZARD', 'HAZARD_ON_ROAD'), ('JAM', 'JAM_LIGHT_TRAFFIC'), ('HAZARD', 'HAZARD_ON_ROAD_OBJECT'), ('JAM', 'JAM_MODERATE_TRAFFIC'), ('HAZARD', 'HAZARD_ON_ROAD_ICE'), ('JAM', 'Unclassified'), ('HAZARD', 'HAZARD_ON_ROAD_ROAD_KILL'), ('ACCIDENT', 'Unclassified'), ('HAZARD', 'HAZARD_ON_ROAD_TRAFFIC_LIGHT_FAULT'), ('JAM', 'JAM_STAND_STILL_TRAFFIC'), ('HAZARD', 'Unclassified'), ('ROAD_CLOSED', 'Unclassified'), ('HAZARD', 'HAZARD_WEATHER_HAIL'), ('ROAD_CLOSED', 'ROAD_CLOSED_HAZARD'), ('HAZARD', 'HAZARD_WEATHER_FLOOD'), ('HAZARD', 'HAZARD_ON_ROAD_POT_HOLE'), ('JAM', 'JAM_HEAVY_TRAFFIC'), ('HAZARD', 'HAZARD_ON_SHOULDER_CAR_STOPPED'), ('ACCIDENT', 'ACCIDENT_MAJOR'), ('ROAD_CLOSED', 'ROAD_CLOSED_EVENT'), ('HAZARD', 'HAZARD_ON_ROAD_LANE_CLOSED'), ('HAZARD', 'HAZARD_ON_SHOULDER_MISSING_SIGN'), ('HAZARD', 'HAZARD_ON_SHOULDER'), ('HAZARD', 'HAZARD_ON_SHOULDER_ANIMALS'), ('ROAD_CLOSED', 'ROAD_CLOSED_CONSTRUCTION'), ('HAZARD', 'HAZARD_ON_ROAD_EMERGENCY_VEHICLE'), ('HAZARD', 'HAZARD_ON_ROAD_CAR_STOPPED'), ('HAZARD', 'HAZARD_ON_ROAD_CONSTRUCTION'), ('HAZARD', 'HAZARD_WEATHER'), ('HAZARD', 'HAZARD_WEATHER_FOG')}</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="app-1-top-location-by-alert-type-dashboard-30-points" class="level1 unnumbered">
+<h1 class="unnumbered">App #1: Top Location by Alert Type Dashboard (30 points)</h1>
+<ol type="1">
+<li></li>
+</ol>
+<ol type="a">
+<li></li>
+</ol>
+<div id="04dbf4fa" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"waze_data.csv"</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to extract coordinates</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_coordinates(geo_string):</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    pattern <span class="op">=</span> <span class="vs">r'POINT\((-?\d+\.?\d*)\s+(-?\d+\.?\d*)\)'</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    match <span class="op">=</span> re.search(pattern, geo_string)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> match:</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">float</span>(match.group(<span class="dv">2</span>)), <span class="bu">float</span>(match.group(<span class="dv">1</span>))  <span class="co"># Latitude, Longitude</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">None</span>, <span class="va">None</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the function to create new columns</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'latitude'</span>], df[<span class="st">'longitude'</span>] <span class="op">=</span> <span class="bu">zip</span>(<span class="op">*</span>df[<span class="st">'geo'</span>].<span class="bu">apply</span>(extract_coordinates))</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify the new columns</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[[<span class="st">'geo'</span>, <span class="st">'latitude'</span>, <span class="st">'longitude'</span>]].head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                           geo   latitude  longitude
+0  POINT(-87.676685 41.929692)  41.929692 -87.676685
+1  POINT(-87.624816 41.753358)  41.753358 -87.624816
+2  POINT(-87.614122 41.889821)  41.889821 -87.614122
+3  POINT(-87.680139 41.939093)  41.939093 -87.680139
+4   POINT(-87.735235 41.91658)  41.916580 -87.735235</code></pre>
+</div>
+</div>
+<ol start="2" type="a">
+<li></li>
+</ol>
+<div id="f4025aa7" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data (assuming you've already extracted latitude and longitude)</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"waze_data.csv"</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to extract coordinates (if not already done)</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_coordinates(geo_string):</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    pattern <span class="op">=</span> <span class="vs">r'POINT\((-?\d+\.?\d*)\s+(-?\d+\.?\d*)\)'</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    match <span class="op">=</span> re.search(pattern, geo_string)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> match:</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">float</span>(match.group(<span class="dv">2</span>)), <span class="bu">float</span>(match.group(<span class="dv">1</span>))  <span class="co"># Latitude, Longitude</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">None</span>, <span class="va">None</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the function to create new columns (if not already done)</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">'latitude'</span> <span class="kw">not</span> <span class="kw">in</span> df.columns <span class="kw">or</span> <span class="st">'longitude'</span> <span class="kw">not</span> <span class="kw">in</span> df.columns:</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'latitude'</span>], df[<span class="st">'longitude'</span>] <span class="op">=</span> <span class="bu">zip</span>(<span class="op">*</span>df[<span class="st">'geo'</span>].<span class="bu">apply</span>(extract_coordinates))</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Bin the latitude and longitude</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'binned_lat'</span>] <span class="op">=</span> (df[<span class="st">'latitude'</span>] <span class="op">//</span> <span class="fl">0.01</span>) <span class="op">*</span> <span class="fl">0.01</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'binned_lon'</span>] <span class="op">=</span> (df[<span class="st">'longitude'</span>] <span class="op">//</span> <span class="fl">0.01</span>) <span class="op">*</span> <span class="fl">0.01</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Round to two decimal places for consistency</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'binned_lat'</span>] <span class="op">=</span> df[<span class="st">'binned_lat'</span>].<span class="bu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'binned_lon'</span>] <span class="op">=</span> df[<span class="st">'binned_lon'</span>].<span class="bu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Group by binned coordinates and count occurrences</span></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>grouped <span class="op">=</span> df.groupby([<span class="st">'binned_lat'</span>, <span class="st">'binned_lon'</span>]).size().reset_index(name<span class="op">=</span><span class="st">'count'</span>)</span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the combination with the greatest number of observations</span></span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>max_combo <span class="op">=</span> grouped.loc[grouped[<span class="st">'count'</span>].idxmax()]</span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Binned latitude-longitude combination with the greatest number of observations:"</span>)</span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Latitude: </span><span class="sc">{</span>max_combo[<span class="st">'binned_lat'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Longitude: </span><span class="sc">{</span>max_combo[<span class="st">'binned_lon'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Count: </span><span class="sc">{</span>max_combo[<span class="st">'count'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Optional: Display the top 5 combinations</span></span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Top 5 binned latitude-longitude combinations:"</span>)</span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(grouped.sort_values(<span class="st">'count'</span>, ascending<span class="op">=</span><span class="va">False</span>).head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Binned latitude-longitude combination with the greatest number of observations:
+Latitude: 41.96
+Longitude: -87.75
+Count: 26537.0
+
+Top 5 binned latitude-longitude combinations:
+     binned_lat  binned_lon  count
+589       41.96      -87.75  26537
+421       41.88      -87.65  22934
+437       41.89      -87.66  16703
+404       41.87      -87.65  15032
+339       41.83      -87.64  13280</code></pre>
+</div>
+</div>
+<ol start="3" type="a">
+<li></li>
+</ol>
+<div id="ba7df6d3" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data </span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"waze_data.csv"</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to extract coordinates </span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_coordinates(geo_string):</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    pattern <span class="op">=</span> <span class="vs">r'POINT\((-?\d+\.?\d*)\s+(-?\d+\.?\d*)\)'</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    match <span class="op">=</span> re.search(pattern, geo_string)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> match:</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">float</span>(match.group(<span class="dv">2</span>)), <span class="bu">float</span>(match.group(<span class="dv">1</span>))  <span class="co"># Latitude, Longitude</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">None</span>, <span class="va">None</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the function to create new columns </span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">'latitude'</span> <span class="kw">not</span> <span class="kw">in</span> df.columns <span class="kw">or</span> <span class="st">'longitude'</span> <span class="kw">not</span> <span class="kw">in</span> df.columns:</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'latitude'</span>], df[<span class="st">'longitude'</span>] <span class="op">=</span> <span class="bu">zip</span>(<span class="op">*</span>df[<span class="st">'geo'</span>].<span class="bu">apply</span>(extract_coordinates))</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Bin the latitude and longitude </span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">'binned_lat'</span> <span class="kw">not</span> <span class="kw">in</span> df.columns <span class="kw">or</span> <span class="st">'binned_lon'</span> <span class="kw">not</span> <span class="kw">in</span> df.columns:</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'binned_lat'</span>] <span class="op">=</span> (df[<span class="st">'latitude'</span>] <span class="op">//</span> <span class="fl">0.01</span>) <span class="op">*</span> <span class="fl">0.01</span></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'binned_lon'</span>] <span class="op">=</span> (df[<span class="st">'longitude'</span>] <span class="op">//</span> <span class="fl">0.01</span>) <span class="op">*</span> <span class="fl">0.01</span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'binned_lat'</span>] <span class="op">=</span> df[<span class="st">'binned_lat'</span>].<span class="bu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'binned_lon'</span>] <span class="op">=</span> df[<span class="st">'binned_lon'</span>].<span class="bu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Collapse the data</span></span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>collapsed_df <span class="op">=</span> df.groupby([<span class="st">'binned_lat'</span>, <span class="st">'binned_lon'</span>, <span class="st">'type'</span>, <span class="st">'subtype'</span>]).size().reset_index(name<span class="op">=</span><span class="st">'count'</span>)</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort the data by count in descending order</span></span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>collapsed_df <span class="op">=</span> collapsed_df.sort_values(<span class="st">'count'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the DataFrame as top_alerts_map.csv</span></span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>collapsed_df.to_csv(<span class="st">'top_alerts_map/top_alerts_map.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Print information about the DataFrame</span></span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Level of aggregation: binned_lat, binned_lon, type, subtype"</span>)</span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of rows in the DataFrame: </span><span class="sc">{</span><span class="bu">len</span>(collapsed_df)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Optional: Display the first few rows of the DataFrame</span></span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">First few rows of the collapsed DataFrame:"</span>)</span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(collapsed_df.head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Level of aggregation: binned_lat, binned_lon, type, subtype
+Number of rows in the DataFrame: 9121
+
+First few rows of the collapsed DataFrame:
+      binned_lat  binned_lon         type            subtype  count
+7570       41.96      -87.75  ROAD_CLOSED  ROAD_CLOSED_EVENT  14837
+5220       41.88      -87.65  ROAD_CLOSED  ROAD_CLOSED_EVENT   9898
+3906       41.83      -87.64  ROAD_CLOSED  ROAD_CLOSED_EVENT   5060
+5465       41.89      -87.66          JAM  JAM_HEAVY_TRAFFIC   4991
+609        41.69      -87.60  ROAD_CLOSED  ROAD_CLOSED_EVENT   4961</code></pre>
+</div>
+</div>
+<ol start="2" type="1">
+<li></li>
+</ol>
+<div id="7386f6c0" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'top_alerts_map/top_alerts_map.csv'</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for "Jam - Heavy Traffic" alerts and get the top 10</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>jam_heavy_traffic <span class="op">=</span> df[(df[<span class="st">'type'</span>] <span class="op">==</span> <span class="st">'JAM'</span>) <span class="op">&amp;</span> (df[<span class="st">'subtype'</span>] <span class="op">==</span> <span class="st">'JAM_HEAVY_TRAFFIC'</span>)]</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>top_10 <span class="op">=</span> jam_heavy_traffic.nlargest(<span class="dv">10</span>, <span class="st">'count'</span>)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the scatter plot</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>chart <span class="op">=</span> alt.Chart(top_10).mark_circle().encode(</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">'binned_lon:Q'</span>, title<span class="op">=</span><span class="st">'Longitude'</span>, scale<span class="op">=</span>alt.Scale(domain<span class="op">=</span>[top_10[<span class="st">'binned_lon'</span>].<span class="bu">min</span>() <span class="op">-</span> <span class="fl">0.01</span>, top_10[<span class="st">'binned_lon'</span>].<span class="bu">max</span>() <span class="op">+</span> <span class="fl">0.01</span>])),</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">'binned_lat:Q'</span>, title<span class="op">=</span><span class="st">'Latitude'</span>, scale<span class="op">=</span>alt.Scale(domain<span class="op">=</span>[top_10[<span class="st">'binned_lat'</span>].<span class="bu">min</span>() <span class="op">-</span> <span class="fl">0.01</span>, top_10[<span class="st">'binned_lat'</span>].<span class="bu">max</span>() <span class="op">+</span> <span class="fl">0.01</span>])),</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    size<span class="op">=</span>alt.Size(<span class="st">'count:Q'</span>, title<span class="op">=</span><span class="st">'Number of Alerts'</span>),</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    tooltip<span class="op">=</span>[<span class="st">'binned_lon'</span>, <span class="st">'binned_lat'</span>, <span class="st">'count'</span>]</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Top 10 Locations for Jam - Heavy Traffic Alerts'</span>,</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">600</span>,</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">400</span></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the chart</span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>chart.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+  #altair-viz-bc96e021676c4caa9119b23b5b3c1253.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-bc96e021676c4caa9119b23b5b3c1253.vega-embed details,
+  #altair-viz-bc96e021676c4caa9119b23b5b3c1253.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-bc96e021676c4caa9119b23b5b3c1253"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-bc96e021676c4caa9119b23b5b3c1253") {
+      outputDiv = document.getElementById("altair-viz-bc96e021676c4caa9119b23b5b3c1253");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@5.20.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@6?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "5")
+        .then(() => maybeLoadScript("vega-lite", "5.20.1"))
+        .then(() => maybeLoadScript("vega-embed", "6"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "data": {"name": "data-acaa27a16c690542e8eab8d596aade64"}, "mark": {"type": "circle"}, "encoding": {"size": {"field": "count", "title": "Number of Alerts", "type": "quantitative"}, "tooltip": [{"field": "binned_lon", "type": "quantitative"}, {"field": "binned_lat", "type": "quantitative"}, {"field": "count", "type": "quantitative"}], "x": {"field": "binned_lon", "scale": {"domain": [-87.78, -87.64]}, "title": "Longitude", "type": "quantitative"}, "y": {"field": "binned_lat", "scale": {"domain": [41.86, 41.98]}, "title": "Latitude", "type": "quantitative"}}, "height": 400, "title": "Top 10 Locations for Jam - Heavy Traffic Alerts", "width": 600, "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json", "datasets": {"data-acaa27a16c690542e8eab8d596aade64": [{"binned_lat": 41.89, "binned_lon": -87.66, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 4991}, {"binned_lat": 41.87, "binned_lon": -87.65, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 4121}, {"binned_lat": 41.9, "binned_lon": -87.67, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 3845}, {"binned_lat": 41.96, "binned_lon": -87.75, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 3360}, {"binned_lat": 41.88, "binned_lon": -87.65, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 3267}, {"binned_lat": 41.94, "binned_lon": -87.72, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 3177}, {"binned_lat": 41.96, "binned_lon": -87.76, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 3013}, {"binned_lat": 41.97, "binned_lon": -87.77, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 2900}, {"binned_lat": 41.93, "binned_lon": -87.71, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 2732}, {"binned_lat": 41.91, "binned_lon": -87.67, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 2612}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<ol start="3" type="1">
+<li></li>
+</ol>
+<ol type="a">
+<li></li>
+</ol>
+<div id="ddbd662e" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># URL for the neighborhood boundaries GeoJSON</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://data.cityofchicago.org/api/geospatial/9y82-ww7h?method=export&amp;format=GeoJSON'</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Send a GET request to download the GeoJSON</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the GeoJSON file</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>file_path <span class="op">=</span> <span class="st">'top_alerts_map/chicago_neighborhoods.geojson'</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(file_path, <span class="st">'wb'</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">file</span>.write(response.content)</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the GeoJSON file</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(file_path) <span class="im">as</span> f:</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    chicago_geojson <span class="op">=</span> json.load(f)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="a">
+<li></li>
+</ol>
+<div id="8ef71e69" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the GeoJSON file</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>file_path <span class="op">=</span> <span class="st">"C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map/chicago_neighborhoods.geojson"</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(file_path) <span class="im">as</span> f:</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    chicago_geojson <span class="op">=</span> json.load(f)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the structure of the GeoJSON</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Keys in chicago_geojson:"</span>, chicago_geojson.keys())</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust this line based on the actual structure of your GeoJSON</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>geo_data <span class="op">=</span> alt.Data(values<span class="op">=</span>chicago_geojson.get(<span class="st">"features"</span>) <span class="kw">or</span> chicago_geojson.get(<span class="st">"data"</span>) <span class="kw">or</span> chicago_geojson)</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the top alerts data</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'top_alerts_map/top_alerts_map.csv'</span>)</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for "Jam - Heavy Traffic" alerts and get the top 10</span></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>jam_heavy_traffic <span class="op">=</span> df[(df[<span class="st">'type'</span>] <span class="op">==</span> <span class="st">'JAM'</span>) <span class="op">&amp;</span> (df[<span class="st">'subtype'</span>] <span class="op">==</span> <span class="st">'JAM_HEAVY_TRAFFIC'</span>)]</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>top_10 <span class="op">=</span> jam_heavy_traffic.nlargest(<span class="dv">10</span>, <span class="st">'count'</span>)</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the base map layer</span></span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>base_map <span class="op">=</span> alt.Chart(geo_data).mark_geoshape(</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>    fill<span class="op">=</span><span class="st">'lightgray'</span>,</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>    stroke<span class="op">=</span><span class="st">'white'</span></span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>).encode(</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">600</span>,</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">400</span></span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the scatter plot layer</span></span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>points <span class="op">=</span> alt.Chart(top_10).mark_circle().encode(</span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a>    longitude<span class="op">=</span><span class="st">'binned_lon:Q'</span>,</span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a>    latitude<span class="op">=</span><span class="st">'binned_lat:Q'</span>,</span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a>    size<span class="op">=</span>alt.Size(<span class="st">'count:Q'</span>, title<span class="op">=</span><span class="st">'Number of Alerts'</span>, scale<span class="op">=</span>alt.Scale(<span class="bu">range</span><span class="op">=</span>[<span class="dv">100</span>, <span class="dv">1000</span>])),</span>
+<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>alt.value(<span class="st">'teal'</span>),</span>
+<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a>    tooltip<span class="op">=</span>[<span class="st">'binned_lon'</span>, <span class="st">'binned_lat'</span>, <span class="st">'count'</span>]</span>
+<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine the layers</span></span>
+<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a>final_chart <span class="op">=</span> alt.layer(base_map, points).properties(</span>
+<span id="cb27-44"><a href="#cb27-44" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Top 10 Locations for Jam - Heavy Traffic Alerts in Chicago'</span></span>
+<span id="cb27-45"><a href="#cb27-45" aria-hidden="true" tabindex="-1"></a>).project(</span>
+<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a>    <span class="bu">type</span><span class="op">=</span><span class="st">'equirectangular'</span>,</span>
+<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a>    scale<span class="op">=</span><span class="dv">60000</span>,</span>
+<span id="cb27-48"><a href="#cb27-48" aria-hidden="true" tabindex="-1"></a>    center<span class="op">=</span>[<span class="op">-</span><span class="fl">87.65</span>, <span class="fl">41.88</span>]  <span class="co"># Approximate center of Chicago</span></span>
+<span id="cb27-49"><a href="#cb27-49" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-50"><a href="#cb27-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-51"><a href="#cb27-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the chart</span></span>
+<span id="cb27-52"><a href="#cb27-52" aria-hidden="true" tabindex="-1"></a>final_chart.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Keys in chicago_geojson: dict_keys(['code', 'error', 'message', 'data'])</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+  #altair-viz-6999efe71cd44ccba1811d8816337044.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-6999efe71cd44ccba1811d8816337044.vega-embed details,
+  #altair-viz-6999efe71cd44ccba1811d8816337044.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-6999efe71cd44ccba1811d8816337044"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-6999efe71cd44ccba1811d8816337044") {
+      outputDiv = document.getElementById("altair-viz-6999efe71cd44ccba1811d8816337044");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@5.20.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@6?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "5")
+        .then(() => maybeLoadScript("vega-lite", "5.20.1"))
+        .then(() => maybeLoadScript("vega-embed", "6"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "layer": [{"data": {"values": {"id": "9y82-ww7h"}}, "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "white"}, "encoding": {}}, {"data": {"name": "data-acaa27a16c690542e8eab8d596aade64"}, "mark": {"type": "circle"}, "encoding": {"color": {"value": "teal"}, "latitude": {"field": "binned_lat", "type": "quantitative"}, "longitude": {"field": "binned_lon", "type": "quantitative"}, "size": {"field": "count", "scale": {"range": [100, 1000]}, "title": "Number of Alerts", "type": "quantitative"}, "tooltip": [{"field": "binned_lon", "type": "quantitative"}, {"field": "binned_lat", "type": "quantitative"}, {"field": "count", "type": "quantitative"}]}}], "height": 400, "projection": {"center": [-87.65, 41.88], "scale": 60000, "type": "equirectangular"}, "title": "Top 10 Locations for Jam - Heavy Traffic Alerts in Chicago", "width": 600, "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json", "datasets": {"data-acaa27a16c690542e8eab8d596aade64": [{"binned_lat": 41.89, "binned_lon": -87.66, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 4991}, {"binned_lat": 41.87, "binned_lon": -87.65, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 4121}, {"binned_lat": 41.9, "binned_lon": -87.67, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 3845}, {"binned_lat": 41.96, "binned_lon": -87.75, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 3360}, {"binned_lat": 41.88, "binned_lon": -87.65, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 3267}, {"binned_lat": 41.94, "binned_lon": -87.72, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 3177}, {"binned_lat": 41.96, "binned_lon": -87.76, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 3013}, {"binned_lat": 41.97, "binned_lon": -87.77, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 2900}, {"binned_lat": 41.93, "binned_lon": -87.71, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 2732}, {"binned_lat": 41.91, "binned_lon": -87.67, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 2612}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<ol start="4" type="1">
+<li></li>
+</ol>
+<div id="d5712583" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the GeoJSON file</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>file_path <span class="op">=</span> <span class="st">"C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map/chicago_neighborhoods.geojson"</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(file_path) <span class="im">as</span> f:</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    chicago_geojson <span class="op">=</span> json.load(f)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the GeoJSON data for Altair</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>geo_data <span class="op">=</span> alt.Data(values<span class="op">=</span>chicago_geojson.get(<span class="st">"features"</span>) <span class="kw">or</span> chicago_geojson.get(<span class="st">"data"</span>) <span class="kw">or</span> chicago_geojson)</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the top alerts data</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'top_alerts_map/top_alerts_map.csv'</span>)</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for "Jam - Heavy Traffic" alerts and get the top 10</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>jam_heavy_traffic <span class="op">=</span> df[(df[<span class="st">'type'</span>] <span class="op">==</span> <span class="st">'JAM'</span>) <span class="op">&amp;</span> (df[<span class="st">'subtype'</span>] <span class="op">==</span> <span class="st">'JAM_HEAVY_TRAFFIC'</span>)]</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>top_10 <span class="op">=</span> jam_heavy_traffic.nlargest(<span class="dv">10</span>, <span class="st">'count'</span>)</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the bounding box for Chicago</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>lon_min, lon_max <span class="op">=</span> top_10[<span class="st">'binned_lon'</span>].<span class="bu">min</span>(), top_10[<span class="st">'binned_lon'</span>].<span class="bu">max</span>()</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>lat_min, lat_max <span class="op">=</span> top_10[<span class="st">'binned_lat'</span>].<span class="bu">min</span>(), top_10[<span class="st">'binned_lat'</span>].<span class="bu">max</span>()</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Add some padding to the bounding box</span></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>padding <span class="op">=</span> <span class="fl">0.05</span></span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>lon_min <span class="op">-=</span> padding</span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>lon_max <span class="op">+=</span> padding</span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>lat_min <span class="op">-=</span> padding</span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>lat_max <span class="op">+=</span> padding</span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the base map layer</span></span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a>base_map <span class="op">=</span> alt.Chart(geo_data).mark_geoshape(</span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>    fill<span class="op">=</span><span class="st">'lightgray'</span>,</span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a>    stroke<span class="op">=</span><span class="st">'white'</span>,</span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a>    opacity<span class="op">=</span><span class="fl">0.5</span>  <span class="co"># Make the map fill slightly transparent</span></span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">600</span>,</span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">400</span></span>
+<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the scatter plot layer</span></span>
+<span id="cb29-42"><a href="#cb29-42" aria-hidden="true" tabindex="-1"></a>points <span class="op">=</span> alt.Chart(top_10).mark_circle().encode(</span>
+<span id="cb29-43"><a href="#cb29-43" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">'binned_lon:Q'</span>, scale<span class="op">=</span>alt.Scale(domain<span class="op">=</span>[lon_min, lon_max])),</span>
+<span id="cb29-44"><a href="#cb29-44" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">'binned_lat:Q'</span>, scale<span class="op">=</span>alt.Scale(domain<span class="op">=</span>[lat_min, lat_max])),</span>
+<span id="cb29-45"><a href="#cb29-45" aria-hidden="true" tabindex="-1"></a>    size<span class="op">=</span>alt.Size(<span class="st">'count:Q'</span>, title<span class="op">=</span><span class="st">'Number of Alerts'</span>, scale<span class="op">=</span>alt.Scale(<span class="bu">range</span><span class="op">=</span>[<span class="dv">100</span>, <span class="dv">1000</span>])),</span>
+<span id="cb29-46"><a href="#cb29-46" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>alt.value(<span class="st">'orange'</span>),</span>
+<span id="cb29-47"><a href="#cb29-47" aria-hidden="true" tabindex="-1"></a>    tooltip<span class="op">=</span>[<span class="st">'binned_lon'</span>, <span class="st">'binned_lat'</span>, <span class="st">'count'</span>]</span>
+<span id="cb29-48"><a href="#cb29-48" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-49"><a href="#cb29-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-50"><a href="#cb29-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine the layers</span></span>
+<span id="cb29-51"><a href="#cb29-51" aria-hidden="true" tabindex="-1"></a>final_chart <span class="op">=</span> (base_map <span class="op">+</span> points).properties(</span>
+<span id="cb29-52"><a href="#cb29-52" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Top 10 Locations for Jam - Heavy Traffic Alerts in Chicago'</span></span>
+<span id="cb29-53"><a href="#cb29-53" aria-hidden="true" tabindex="-1"></a>).project(</span>
+<span id="cb29-54"><a href="#cb29-54" aria-hidden="true" tabindex="-1"></a>    <span class="bu">type</span><span class="op">=</span><span class="st">'mercator'</span>,</span>
+<span id="cb29-55"><a href="#cb29-55" aria-hidden="true" tabindex="-1"></a>    scale<span class="op">=</span><span class="dv">80000</span>,</span>
+<span id="cb29-56"><a href="#cb29-56" aria-hidden="true" tabindex="-1"></a>    center<span class="op">=</span>[(lon_min <span class="op">+</span> lon_max) <span class="op">/</span> <span class="dv">2</span>, (lat_min <span class="op">+</span> lat_max) <span class="op">/</span> <span class="dv">2</span>]  <span class="co"># Center based on data</span></span>
+<span id="cb29-57"><a href="#cb29-57" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-58"><a href="#cb29-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-59"><a href="#cb29-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the chart</span></span>
+<span id="cb29-60"><a href="#cb29-60" aria-hidden="true" tabindex="-1"></a>final_chart.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+  #altair-viz-5ff6812546e64a2cb9576c25a75150ed.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-5ff6812546e64a2cb9576c25a75150ed.vega-embed details,
+  #altair-viz-5ff6812546e64a2cb9576c25a75150ed.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-5ff6812546e64a2cb9576c25a75150ed"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-5ff6812546e64a2cb9576c25a75150ed") {
+      outputDiv = document.getElementById("altair-viz-5ff6812546e64a2cb9576c25a75150ed");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@5.20.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@6?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "5")
+        .then(() => maybeLoadScript("vega-lite", "5.20.1"))
+        .then(() => maybeLoadScript("vega-embed", "6"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "layer": [{"data": {"values": {"id": "9y82-ww7h"}}, "mark": {"type": "geoshape", "fill": "lightgray", "opacity": 0.5, "stroke": "white"}}, {"data": {"name": "data-acaa27a16c690542e8eab8d596aade64"}, "mark": {"type": "circle"}, "encoding": {"color": {"value": "orange"}, "size": {"field": "count", "scale": {"range": [100, 1000]}, "title": "Number of Alerts", "type": "quantitative"}, "tooltip": [{"field": "binned_lon", "type": "quantitative"}, {"field": "binned_lat", "type": "quantitative"}, {"field": "count", "type": "quantitative"}], "x": {"field": "binned_lon", "scale": {"domain": [-87.82, -87.60000000000001]}, "type": "quantitative"}, "y": {"field": "binned_lat", "scale": {"domain": [41.82, 42.019999999999996]}, "type": "quantitative"}}}], "height": 400, "projection": {"center": [-87.71000000000001, 41.92], "scale": 80000, "type": "mercator"}, "title": "Top 10 Locations for Jam - Heavy Traffic Alerts in Chicago", "width": 600, "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json", "datasets": {"data-acaa27a16c690542e8eab8d596aade64": [{"binned_lat": 41.89, "binned_lon": -87.66, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 4991}, {"binned_lat": 41.87, "binned_lon": -87.65, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 4121}, {"binned_lat": 41.9, "binned_lon": -87.67, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 3845}, {"binned_lat": 41.96, "binned_lon": -87.75, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 3360}, {"binned_lat": 41.88, "binned_lon": -87.65, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 3267}, {"binned_lat": 41.94, "binned_lon": -87.72, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 3177}, {"binned_lat": 41.96, "binned_lon": -87.76, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 3013}, {"binned_lat": 41.97, "binned_lon": -87.77, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 2900}, {"binned_lat": 41.93, "binned_lon": -87.71, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 2732}, {"binned_lat": 41.91, "binned_lon": -87.67, "type": "JAM", "subtype": "JAM_HEAVY_TRAFFIC", "count": 2612}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<ol start="5" type="1">
+<li></li>
+</ol>
+<ol type="a">
+<li></li>
+</ol>
+<div id="1406a2bd" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>(<span class="st">"C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6</span><span class="ch">\t</span><span class="st">op_alerts_map</span><span class="ch">\b</span><span class="st">asic-app\Screenshot 2024-11-22 131331.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="a">
+<li></li>
+</ol>
+<div id="000c1bf3" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>(<span class="st">"C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6</span><span class="ch">\t</span><span class="st">op_alerts_map</span><span class="ch">\b</span><span class="st">asic-app\Jam Heavy Traffic.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="a">
+<li>Road closures due to events are most common in western Chicago, with additional significant clusters near the lakefront and northeastern areas</li>
+</ol>
+<div id="74a4da70" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>(<span class="st">"C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6</span><span class="ch">\t</span><span class="st">op_alerts_map</span><span class="ch">\b</span><span class="st">asic-app\Road Closed Event.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="4" type="a">
+<li>Question: “Where are the most frequent pothole hazards reported in Chicago, and what areas show the highest concentration of pothole alerts?”</li>
+</ol>
+<p>Looking at the map displaying HAZARD - HAZARD_ON_ROAD_POT_HOLE alerts, we can provide the following analysis:</p>
+<p>The map reveals several key insights about pothole hazards in Chicago: - The largest concentrations appear in the central-west and south-west regions of the city - There are multiple significant clusters in the mid-section of Chicago, with circles indicating 300-400 alerts in these areas - The northern and southern parts of the city show scattered but notable pothole reports - The distribution suggests that certain arterial roads or high-traffic areas experience more frequent pothole issues</p>
+<p>This information could be valuable for: - City maintenance departments prioritizing road repairs - Drivers planning their routes to avoid problematic areas - Infrastructure planning and budget allocation - Understanding patterns of road deterioration across different neighborhoods</p>
+<div id="ccc9cb51" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>(<span class="st">"C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6</span><span class="ch">\t</span><span class="st">op_alerts_map</span><span class="ch">\b</span><span class="st">asic-app\Hazard Pot Hole.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="5" type="a">
+<li></li>
+</ol>
+<p>I can suggest adding a “Time” column to enhance the dashboard analysis. Here’s why and how it would be beneficial:</p>
+<p>Currently, the dashboard shows spatial distribution of alerts (locations and frequencies) but lacks temporal context</p>
+<p>We can add a date/time filter dropdown or slider</p>
+<p>Allow users to select specific: Time of day (morning/afternoon/evening/night) Day of week Month or season Year</p>
+<p>Benefits: Enable comparison between different time periods Help city planners better allocate resources based on temporal trends</p>
+</section>
+<section id="app-2-top-location-by-alert-type-and-hour-dashboard-20-points" class="level1 unnumbered">
+<h1 class="unnumbered">App #2: Top Location by Alert Type and Hour Dashboard (20 points)</h1>
+<ol type="1">
+<li></li>
+</ol>
+<ol type="a">
+<li>No, it would not be a good idea to collapse the dataset by the exact timestamp (‘ts’ column) because:</li>
+</ol>
+<ul>
+<li>Timestamps contain very specific time information (down to seconds), making the data too granular if collapsed this way</li>
+<li>We only need hourly patterns for our analysis, not second-by-second data</li>
+<li>Grouping by exact timestamps would fragment the data too much, making it difficult to identify meaningful hourly patterns</li>
+<li>Instead, we should extract just the hour component from the timestamp for more meaningful aggregation and analysis</li>
+<li>This approach will provide better insights into traffic patterns while maintaining statistical significance in our findings.</li>
+</ul>
+<ol start="2" type="a">
+<li></li>
+</ol>
+<div id="708ec4b0" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the original dataset</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/waze_data.csv'</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert timestamp to datetime and extract hour</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'ts'</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">'ts'</span>])</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'hour'</span>] <span class="op">=</span> df[<span class="st">'ts'</span>].dt.strftime(<span class="st">'%H:00'</span>)</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract coordinates from geoWKT column</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Format is Point(-87.676685 41.929692)</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'coordinates'</span>] <span class="op">=</span> df[<span class="st">'geoWKT'</span>].<span class="bu">str</span>.extract(<span class="vs">r'\((.*?)\)'</span>)</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">'lon'</span>, <span class="st">'lat'</span>]] <span class="op">=</span> df[<span class="st">'coordinates'</span>].<span class="bu">str</span>.split(<span class="st">' '</span>, expand<span class="op">=</span><span class="va">True</span>).astype(<span class="bu">float</span>)</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Create binned coordinates</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'binned_lat'</span>] <span class="op">=</span> df[<span class="st">'lat'</span>].<span class="bu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'binned_lon'</span>] <span class="op">=</span> df[<span class="st">'lon'</span>].<span class="bu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Add count column for aggregation</span></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'count'</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Group by hour, type, subtype, and location</span></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>collapsed_df <span class="op">=</span> df.groupby([<span class="st">'hour'</span>, <span class="st">'type'</span>, <span class="st">'subtype'</span>, <span class="st">'binned_lat'</span>, <span class="st">'binned_lon'</span>])[<span class="st">'count'</span>].<span class="bu">sum</span>().reset_index()</span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the new dataset</span></span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>output_path <span class="op">=</span> <span class="st">'C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/top_alerts_map_byhour.csv'</span></span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>collapsed_df.to_csv(output_path, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the number of rows</span></span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of rows in the new dataset: </span><span class="sc">{</span><span class="bu">len</span>(collapsed_df)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of rows in the new dataset: 272436</code></pre>
+</div>
+</div>
+<ol start="3" type="a">
+<li></li>
+</ol>
+<div id="d27f2a3e" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the hourly data</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/top_alerts_map_byhour.csv'</span>)</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the GeoJSON for the map layer</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>geojson_path <span class="op">=</span> <span class="st">"C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/Boundaries - Neighborhoods.geojson"</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(geojson_path, <span class="st">'r'</span>) <span class="im">as</span> f:</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    chicago_geojson <span class="op">=</span> json.load(f)</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Select three different times (morning rush hour, midday, evening rush hour)</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>selected_hours <span class="op">=</span> [<span class="st">'08:00'</span>, <span class="st">'12:00'</span>, <span class="st">'17:00'</span>]</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Create base map layer</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>base_map <span class="op">=</span> alt.Chart(alt.Data(values<span class="op">=</span>chicago_geojson[<span class="st">'features'</span>])).mark_geoshape(</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>    fill<span class="op">=</span><span class="st">'lightgray'</span>,</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>    stroke<span class="op">=</span><span class="st">'white'</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">600</span>,</span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">400</span></span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Create three plots</span></span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> hour <span class="kw">in</span> selected_hours:</span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Filter data for heavy traffic jams at specific hour</span></span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>    filtered_df <span class="op">=</span> df[</span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>        (df[<span class="st">'type'</span>] <span class="op">==</span> <span class="st">'JAM'</span>) <span class="op">&amp;</span> </span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a>        (df[<span class="st">'subtype'</span>] <span class="op">==</span> <span class="st">'JAM_HEAVY_TRAFFIC'</span>) <span class="op">&amp;</span> </span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a>        (df[<span class="st">'hour'</span>] <span class="op">==</span> hour)</span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>    ].nlargest(<span class="dv">10</span>, <span class="st">'count'</span>)</span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create points layer</span></span>
+<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a>    points <span class="op">=</span> alt.Chart(filtered_df).mark_circle().encode(</span>
+<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a>        longitude<span class="op">=</span><span class="st">'binned_lon:Q'</span>,</span>
+<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a>        latitude<span class="op">=</span><span class="st">'binned_lat:Q'</span>,</span>
+<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span>alt.Size(<span class="st">'count:Q'</span>, title<span class="op">=</span><span class="st">'Number of Alerts'</span>, </span>
+<span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a>                     scale<span class="op">=</span>alt.Scale(<span class="bu">range</span><span class="op">=</span>[<span class="dv">100</span>, <span class="dv">1000</span>])),</span>
+<span id="cb36-40"><a href="#cb36-40" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span>alt.value(<span class="st">'teal'</span>),</span>
+<span id="cb36-41"><a href="#cb36-41" aria-hidden="true" tabindex="-1"></a>        tooltip<span class="op">=</span>[<span class="st">'binned_lon'</span>, <span class="st">'binned_lat'</span>, <span class="st">'count'</span>]</span>
+<span id="cb36-42"><a href="#cb36-42" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb36-43"><a href="#cb36-43" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb36-44"><a href="#cb36-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Combine layers</span></span>
+<span id="cb36-45"><a href="#cb36-45" aria-hidden="true" tabindex="-1"></a>    final_chart <span class="op">=</span> (base_map <span class="op">+</span> points).properties(</span>
+<span id="cb36-46"><a href="#cb36-46" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="ss">f'Top 10 Locations for Heavy Traffic Jams at </span><span class="sc">{</span>hour<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb36-47"><a href="#cb36-47" aria-hidden="true" tabindex="-1"></a>    ).project(</span>
+<span id="cb36-48"><a href="#cb36-48" aria-hidden="true" tabindex="-1"></a>        <span class="bu">type</span><span class="op">=</span><span class="st">'mercator'</span>,</span>
+<span id="cb36-49"><a href="#cb36-49" aria-hidden="true" tabindex="-1"></a>        scale<span class="op">=</span><span class="dv">80000</span>,</span>
+<span id="cb36-50"><a href="#cb36-50" aria-hidden="true" tabindex="-1"></a>        center<span class="op">=</span>[<span class="op">-</span><span class="fl">87.65</span>, <span class="fl">41.88</span>]  <span class="co"># Chicago's approximate center</span></span>
+<span id="cb36-51"><a href="#cb36-51" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb36-52"><a href="#cb36-52" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb36-53"><a href="#cb36-53" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set the output directory path</span></span>
+<span id="cb36-54"><a href="#cb36-54" aria-hidden="true" tabindex="-1"></a>    output_dir <span class="op">=</span> <span class="st">'C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour'</span></span>
+<span id="cb36-55"><a href="#cb36-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-56"><a href="#cb36-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Save each plot with the full path </span></span>
+<span id="cb36-57"><a href="#cb36-57" aria-hidden="true" tabindex="-1"></a>    final_chart.save(<span class="ss">f'</span><span class="sc">{</span>output_dir<span class="sc">}</span><span class="ss">/jam_traffic_</span><span class="sc">{</span>hour<span class="sc">.</span>replace(<span class="st">":"</span>, <span class="st">""</span>)<span class="sc">}</span><span class="ss">.png'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li></li>
+</ol>
+<ol type="a">
+<li></li>
+</ol>
+<div id="2a06e8e1" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>(<span class="st">"C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/App 2 UI.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="a">
+<li></li>
+</ol>
+<div id="4e457912" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>(<span class="st">"C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/jam_traffic_0800_app.png"</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>(<span class="st">"C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/jam_traffic_1200_app.png"</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>(<span class="st">"C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/jam_traffic_1700_app.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="a">
+<li>The pattern suggests that road construction work is preferentially scheduled during nighttime hours (22:00), likely to minimize traffic disruption during peak daytime hours. The night construction pattern shows both more locations and higher intensity of construction activity compared to the early morning hours.</li>
+</ol>
+<div id="51a2d798" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>(<span class="st">"C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/road_construction_0600.png"</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>(<span class="st">"C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/road_construction_2200.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="app-3-top-location-by-alert-type-and-hour-dashboard-20-points" class="level1 unnumbered">
+<h1 class="unnumbered">App #3: Top Location by Alert Type and Hour Dashboard (20 points)</h1>
+<ol type="1">
+<li></li>
+</ol>
+<ol type="a">
+<li>No, it would not be a good idea to collapse the dataset by range of hours because:</li>
+</ol>
+<ul>
+<li>Users need flexibility to select any custom hour range (e.g., 6AM-10AM)</li>
+<li>Pre-collapsing by specific ranges would limit this flexibility</li>
+<li>We can use the existing hourly-aggregated dataset and sum the counts dynamically based on the user’s selected range</li>
+<li>This approach maintains data granularity while still being efficient for the app</li>
+</ul>
+<ol start="2" type="a">
+<li></li>
+</ol>
+<div id="085ab348" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the hourly data</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/top_alerts_map_byhour.csv'</span>)</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Load GeoJSON for Chicago map</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/Boundaries - Neighborhoods.geojson'</span>, <span class="st">'r'</span>) <span class="im">as</span> f:</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>    chicago_geojson <span class="op">=</span> json.load(f)</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter data for heavy traffic jams between 6AM-9AM</span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>filtered_df <span class="op">=</span> df[</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>    (df[<span class="st">'type'</span>] <span class="op">==</span> <span class="st">'JAM'</span>) <span class="op">&amp;</span> </span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>    (df[<span class="st">'subtype'</span>] <span class="op">==</span> <span class="st">'JAM_HEAVY_TRAFFIC'</span>) <span class="op">&amp;</span> </span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>    (df[<span class="st">'hour'</span>].isin([<span class="st">'06:00'</span>, <span class="st">'07:00'</span>, <span class="st">'08:00'</span>, <span class="st">'09:00'</span>]))</span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>].groupby([<span class="st">'binned_lat'</span>, <span class="st">'binned_lon'</span>])[<span class="st">'count'</span>].<span class="bu">sum</span>().reset_index()</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Get top 10 locations</span></span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>top_10_locations <span class="op">=</span> filtered_df.nlargest(<span class="dv">10</span>, <span class="st">'count'</span>)</span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Create base map</span></span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>base_map <span class="op">=</span> alt.Chart(alt.Data(values<span class="op">=</span>chicago_geojson[<span class="st">'features'</span>])).mark_geoshape(</span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>    fill<span class="op">=</span><span class="st">'lightgray'</span>,</span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>    stroke<span class="op">=</span><span class="st">'white'</span></span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">600</span>,</span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">400</span></span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-30"><a href="#cb40-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-31"><a href="#cb40-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Add points for top 10 locations</span></span>
+<span id="cb40-32"><a href="#cb40-32" aria-hidden="true" tabindex="-1"></a>points <span class="op">=</span> alt.Chart(top_10_locations).mark_circle().encode(</span>
+<span id="cb40-33"><a href="#cb40-33" aria-hidden="true" tabindex="-1"></a>    longitude<span class="op">=</span><span class="st">'binned_lon:Q'</span>,</span>
+<span id="cb40-34"><a href="#cb40-34" aria-hidden="true" tabindex="-1"></a>    latitude<span class="op">=</span><span class="st">'binned_lat:Q'</span>,</span>
+<span id="cb40-35"><a href="#cb40-35" aria-hidden="true" tabindex="-1"></a>    size<span class="op">=</span>alt.Size(<span class="st">'count:Q'</span>, title<span class="op">=</span><span class="st">'Number of Alerts'</span>, scale<span class="op">=</span>alt.Scale(<span class="bu">range</span><span class="op">=</span>[<span class="dv">100</span>, <span class="dv">1000</span>])),</span>
+<span id="cb40-36"><a href="#cb40-36" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>alt.value(<span class="st">'teal'</span>),</span>
+<span id="cb40-37"><a href="#cb40-37" aria-hidden="true" tabindex="-1"></a>    tooltip<span class="op">=</span>[<span class="st">'binned_lon'</span>, <span class="st">'binned_lat'</span>, <span class="st">'count'</span>]</span>
+<span id="cb40-38"><a href="#cb40-38" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb40-39"><a href="#cb40-39" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Top 10 Locations for Heavy Traffic Jams (6AM-9AM)'</span></span>
+<span id="cb40-40"><a href="#cb40-40" aria-hidden="true" tabindex="-1"></a>).project(</span>
+<span id="cb40-41"><a href="#cb40-41" aria-hidden="true" tabindex="-1"></a>    <span class="bu">type</span><span class="op">=</span><span class="st">'mercator'</span>,</span>
+<span id="cb40-42"><a href="#cb40-42" aria-hidden="true" tabindex="-1"></a>    scale<span class="op">=</span><span class="dv">80000</span>,</span>
+<span id="cb40-43"><a href="#cb40-43" aria-hidden="true" tabindex="-1"></a>    center<span class="op">=</span>[<span class="op">-</span><span class="fl">87.65</span>, <span class="fl">41.88</span>]</span>
+<span id="cb40-44"><a href="#cb40-44" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-45"><a href="#cb40-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-46"><a href="#cb40-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine layers and save</span></span>
+<span id="cb40-47"><a href="#cb40-47" aria-hidden="true" tabindex="-1"></a>final_chart <span class="op">=</span> (base_map <span class="op">+</span> points)</span>
+<span id="cb40-48"><a href="#cb40-48" aria-hidden="true" tabindex="-1"></a>output_path <span class="op">=</span> <span class="st">'C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/morning_traffic_jams.png'</span></span>
+<span id="cb40-49"><a href="#cb40-49" aria-hidden="true" tabindex="-1"></a>final_chart.save(output_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li></li>
+</ol>
+<ol type="a">
+<li></li>
+</ol>
+<div id="3e93f8b5" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>(<span class="st">"C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/app 3 ui.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="a">
+<li></li>
+</ol>
+<div id="e9f0effb" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>(<span class="st">"C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/morning_traffic_jams_app.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li></li>
+</ol>
+<ol type="a">
+<li></li>
+</ol>
+<p>The possible values for input.switch_button() in your server function would be: True: When user toggles to range of hours mode False: When user keeps single hour selection mode</p>
+<section id="app-with-hour-range-selection" class="level2">
+<h2 class="anchored" data-anchor-id="app-with-hour-range-selection">App with Hour Range Selection</h2>
+<div id="66510b06" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create directory for the new app</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>dir_path <span class="op">=</span> <span class="st">'top_alerts_map_byhour_sliderrange'</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>os.makedirs(dir_path, exist_ok<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="a">
+<li></li>
+</ol>
+<div id="278ff70d" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>(<span class="st">"C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/toggle off.png"</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>(<span class="st">"C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/toggle on.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="a">
+<li></li>
+</ol>
+<div id="5e5f121f" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>(<span class="st">"C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/toggle off.png"</span>)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>(<span class="st">"C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/toggle on.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="4" type="a">
+<li></li>
+</ol>
+<p>To achieve this visualization, the app would need these changes: - Add a grid overlay with latitude/longitude coordinates - Color-code points by time period (red for morning, blue for afternoon) - Add a dual legend showing: - Time periods (Morning/Afternoon) - Circle sizes representing number of alerts - Replace the hour selection with a morning/afternoon toggle - Allow both time periods to be displayed simultaneously on the same map</p>
+<p>These modifications would enable comparison of alert patterns between different times of day.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
