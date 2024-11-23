@@ -859,16 +859,16 @@ for hour in selected_hours:
 
 a. 
 ```{python}
-!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour\basic-app\App 2 UI.png")
+!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/App 2 UI.png")
 ```
 
 b. 
 ```{python}
-!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour\basic-app\jam_traffic_0800_app.png")
+!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/jam_traffic_0800_app.png")
 
-!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour\basic-app\jam_traffic_1200_app.png")
+!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/jam_traffic_1200_app.png")
 
-!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour\basic-app\jam_traffic_1700_app.png")
+!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/jam_traffic_1700_app.png")
 ```
 
 
@@ -876,9 +876,9 @@ c.
 The pattern suggests that road construction work is preferentially scheduled during nighttime hours (22:00), likely to minimize traffic disruption during peak daytime hours. The night construction pattern shows both more locations and higher intensity of construction activity compared to the early morning hours.
 
 ```{python}
-!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour\basic-app\road_construction_0600.png")
+!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/road_construction_0600.png")
 
-!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour\basic-app\road_construction_2200.png")
+!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/basic-app/road_construction_2200.png")
 ```
 
 
@@ -951,12 +951,12 @@ final_chart.save(output_path)
 a. 
 
 ```{python}
-!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour_sliderrange\basic-app\app 3 ui.png")
+!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/app 3 ui.png")
 ```
 
 b. 
 ```{python}
-!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour_sliderrange\basic-app\morning_traffic_jams_app.png")
+!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/morning_traffic_jams_app.png")
 ```
 
 3. 
@@ -980,18 +980,18 @@ os.makedirs(dir_path, exist_ok=True)
 
 b. 
 ```{python}
-!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour_sliderrange\basic-app\toggle off.png")
+!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/toggle off.png")
 
-!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour_sliderrange\basic-app\toggle on.png")
+!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/toggle on.png")
 ```
 
 
 c. 
 
 ```{python}
-!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour_sliderrange\basic-app\toggle off.png")
+!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/toggle off.png")
 
-!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour_sliderrange\basic-app\toggle on.png")
+!("C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/basic-app/toggle on.png")
 ```
 
 
