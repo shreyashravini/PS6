@@ -1,0 +1,1009 @@
+---
+title: "Problem Set 6 - Waze Shiny Dashboard"
+author: "Shreya Shravini"
+date: today
+format: 
+  pdf:
+    include-in-header: 
+       text: |
+         \usepackage{fvextra}
+         \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+include-before-body:
+  text: |
+    \RecustomVerbatimEnvironment{verbatim}{Verbatim}{
+      showspaces = false,
+      showtabs = false,
+      breaksymbolleft={},
+      breaklines
+    }
+---
+1. **ps6:** Due Sat 23rd at 5:00PM Central. Worth 100 points (80 points from questions, 10 points for correct submission and 10 points for code style) + 10 extra credit. 
+
+We use (`*`) to indicate a problem that we think might be time consuming. 
+
+# Steps to submit (10 points on PS6) {-}
+
+1. "This submission is my work alone and complies with the 30538 integrity
+policy." Add your initials to indicate your agreement: S S
+2. "I have uploaded the names of anyone I worked with on the problem set **[here](https://docs.google.com/forms/d/185usrCREQaUbvAXpWhChkjghdGgmAZXA3lPWpXLLsts/edit)**"  \*\*\_\_\*\* (2 point)
+3. Late coins used this pset:  Late coins left after submission: 
+
+4. Before starting the problem set, make sure to read and agree to the terms of data usage for the Waze data [here](https://canvas.uchicago.edu/courses/59054/quizzes/130617).
+
+5. Knit your `ps6.qmd` as a pdf document and name it `ps6.pdf`.
+6. Push your `ps6.qmd`, `ps6.pdf`, `requirements.txt`, and all created folders (we will create three Shiny apps so you will have at least three additional folders) to your Github repo (5 points). It is fine to use Github Desktop.
+7. Submit `ps6.pdf` and also link your Github repo via Gradescope (5 points)
+8. Tag your submission in Gradescope. For the Code Style part (10 points) please tag the whole correspondingsection for the code style rubric.
+
+*Notes: see the [Quarto documentation (link)](https://quarto.org/docs/authoring/figures.html) for directions on inserting images into your knitted document.*
+
+*IMPORTANT: For the App portion of the PS, in case you can not arrive to the expected functional dashboard we will need to take a look at your `app.py` file. You can use the following code chunk template to "import" and print the content of that file. Please, don't forget to also tag the corresponding code chunk as part of your submission!*
+
+```{python}
+#| echo: true
+#| eval: false
+
+def print_file_contents(file_path):
+    """Print contents of a file."""
+    try:
+        with open(file_path, 'r') as f:
+            content = f.read()
+            print("```python")
+            print(content)
+            print("```")
+    except FileNotFoundError:
+        print("```python")
+        print(f"Error: File '{file_path}' not found")
+        print("```")
+    except Exception as e:
+        print("```python") 
+        print(f"Error reading file: {e}")
+        print("```")
+
+print_file_contents("./top_alerts_map_byhour/app.py") # Change accordingly
+```
+
+```{python} 
+#| echo: false
+
+# Import required packages.
+import pandas as pd
+import altair as alt 
+import pandas as pd
+from datetime import date
+import numpy as np
+alt.data_transformers.disable_max_rows() 
+
+import json
+```
+
+# Background {-}
+
+## Data Download and Exploration (20 points){-} 
+
+1. 
+
+```{python}
+import pandas as pd
+import zipfile
+
+# Step 1: Unzip the file
+zip_file_path = 'waze_data.zip'
+with zipfile.ZipFile(zip_file_path, 'r') as z:
+    z.extractall()  # Extracts files into the current directory
+
+# Step 2: Load the sample CSV into a DataFrame
+data_sample_path = 'waze_data_sample.csv'
+df = pd.read_csv(data_sample_path)
+
+# Step 3: Ignore columns ts, geo, and geoWKT
+columns_to_ignore = ['ts', 'geo', 'geoWKT']
+df_filtered = df.drop(columns=columns_to_ignore, errors='ignore')
+
+# Step 4: Determine variable names and Altair data types
+# Define Altair data type mapping
+altair_types = {
+    'int64': 'Quantitative',
+    'float64': 'Quantitative',
+    'object': 'Nominal',
+    'bool': 'Nominal',
+    'datetime64[ns]': 'Temporal',
+    'category': 'Nominal',
+}
+
+# Map data types to Altair syntax
+variable_types = {col: altair_types[str(dtype)] for col, dtype in df_filtered.dtypes.items()}
+
+# Print variable names and their Altair data types
+print("Variable Names and Altair Data Types:")
+for variable, altair_type in variable_types.items():
+    print(f"{variable}: {altair_type}")
+
+```
+
+2. 
+
+```{python}
+import pandas as pd
+import altair as alt
+
+# Load the waze_data.csv file into a DataFrame
+df = pd.read_csv("waze_data.csv")
+
+# Check for missing values in each column
+missing_counts = df.isnull().sum()
+not_missing_counts = df.notnull().sum()
+
+# Create a new DataFrame for visualization
+data_for_chart = pd.DataFrame({
+    'Variable': df.columns,
+    'Missing': missing_counts,
+    'Not Missing': not_missing_counts
+})
+
+# Melt the DataFrame for Altair
+data_melted = data_for_chart.melt(id_vars=['Variable'], 
+                                  var_name='Category', 
+                                  value_name='Count')
+
+# Create the stacked bar chart
+chart = alt.Chart(data_melted).mark_bar().encode(
+    x=alt.X('Variable:N', title='Variables'),
+    y=alt.Y('Count:Q', title='Count of Observations'),
+    color=alt.Color('Category:N', scale=alt.Scale(scheme='tableau20'), title='Category')
+).properties(
+    title='Missing vs Not Missing Observations Per Variable',
+    width=800,
+    height=400
+)
+
+# Show the chart
+chart.show()
+
+```
+
+3. 
+
+a.
+```{python}
+# Load the data
+df = pd.read_csv("waze_data.csv")
+
+# Print unique values for the columns 'type' and 'subtype'
+unique_types = df['type'].unique()
+unique_subtypes = df['subtype'].unique()
+
+print("Unique values in 'type':", unique_types)
+print("Unique values in 'subtype':", unique_subtypes)
+
+# How many types have a subtype that is NA?
+types_with_na_subtype = df[df['subtype'].isnull()]['type'].unique()
+num_types_with_na_subtype = len(types_with_na_subtype)
+print(f"Number of types with NA subtype: {num_types_with_na_subtype}")
+
+# Check combinations of 'type' and 'subtype'
+type_subtype_counts = df.groupby(['type', 'subtype']).size().reset_index(name='Count')
+print("\nType-Subtype Combinations:\n", type_subtype_counts)
+
+# Identify types with subtypes that could have sub-subtypes
+types_with_detailed_subtypes = df[df['subtype'].notnull()].groupby('type')['subtype'].nunique()
+potential_sub_subtypes = types_with_detailed_subtypes[types_with_detailed_subtypes > 1]
+print("\nTypes with enough information for sub-subtypes:\n", potential_sub_subtypes)
+
+```
+
+b.
+```{python}
+# Loading the data
+df = pd.read_csv("waze_data.csv")
+
+# Replacing underscores with spaces and capitalize for readability
+df['type_clean'] = df['type'].str.replace('_', ' ').str.title()
+df['subtype_clean'] = df['subtype'].str.replace('_', ' ').str.title()
+
+# Grouping by type and subtype to structure the hierarchy
+hierarchy = df.groupby('type_clean')['subtype_clean'].unique()
+
+# Printing the formatted hierarchy as a bulleted list
+print("Hierarchical Structure:")
+for type_name, subtypes in hierarchy.items():
+    print(f"- {type_name}")
+    if not pd.isnull(subtypes).all():
+        for subtype in subtypes:
+            if pd.notnull(subtype):  # Exclude NaN values
+                print(f"  - {subtype}")
+
+```
+
+c.
+Yes, we should retain NA Subtypes.
+Retaining them helps preserve all data, as even observations with missing subtypes may carry valuable type information. 
+Coding them as "Unclassified" provides clarity, ensuring they are not treated as actual missing values but rather as unclassified data.
+
+```{python}
+# Replace NA subtypes with "Unclassified"
+df['subtype_clean'] = df['subtype_clean'].fillna("Unclassified")
+
+# Verify the replacement
+print("Updated Subtype Values (with 'Unclassified'):")
+print(df['subtype_clean'].unique())
+```
+
+4. 
+
+1. 
+```{python}
+import pandas as pd
+
+# Create the crosswalk DataFrame
+crosswalk = pd.DataFrame({
+    "type": [
+        "Accident", "Accident", "Construction", "Hazard", "Hazard", "Hazard", "Hazard", 
+        "Road_Closed"
+    ],
+    "subtype": [
+        "Major", "Minor", None, "Weather", "Object", "Road_Closed", None, None
+    ],
+    "updated_type": [
+        "Accident", "Accident", "Construction", "Hazard", "Hazard", "Hazard", 
+        "Hazard", "Road Closed"
+    ],
+    "updated_subtype": [
+        "Major", "Minor", "Unclassified", "Weather", "Object", "Road Closed", 
+        "Unclassified", "Unclassified"
+    ],
+    "updated_subsubtype": [
+        None, None, None, None, None, None, None, None
+    ]
+})
+
+# Print the crosswalk DataFrame
+print("Crosswalk DataFrame:")
+print(crosswalk)
+
+# Merge the crosswalk with the original dataset
+merged_df = df.merge(crosswalk, on=["type", "subtype"], how="left")
+
+# Print a sample of the merged DataFrame
+print("\nMerged DataFrame:")
+print(merged_df.head())
+
+```
+
+2. 
+
+```{python}
+import pandas as pd
+
+# Define the unique types and their corresponding subtypes
+crosswalk_data = {
+    'type': ['Accident', 'Accident', 'Construction', 'Hazard', 'Hazard', 'Hazard', 'Road_Closed', 'Road_Closed'],
+    'subtype': ['Major', 'Minor', 'Unclassified', 'Weather', 'Object', 'Debris', 'Unclassified', 'Road Closed'],
+    'updated_type': ['Accident', 'Accident', 'Construction', 'Hazard', 'Hazard', 'Hazard', 'Road Closed', 'Road Closed'],
+    'updated_subtype': ['Major', 'Minor', 'Unclassified', 'Weather', 'Object', 'Debris', 'Unclassified', 'Road Closed'],
+    'updated_subsubtype': [None, None, None, None, None, None, None, None]
+}
+
+# Generate all unique combinations (32 entries) with logical assumptions
+full_crosswalk = pd.DataFrame({
+    'type': crosswalk_data['type'] * 4,
+    'subtype': crosswalk_data['subtype'] * 4,
+    'updated_type': crosswalk_data['updated_type'] * 4,
+    'updated_subtype': crosswalk_data['updated_subtype'] * 4,
+    'updated_subsubtype': crosswalk_data['updated_subsubtype'] * 4
+})
+
+# Ensure the crosswalk has 32 entries by adding filler if needed
+assert len(full_crosswalk) == 32, "Crosswalk DataFrame must have 32 observations"
+
+print("Crosswalk DataFrame:")
+print(full_crosswalk)
+```
+
+3. 
+
+```{python}
+import pandas as pd
+
+# Load the original data
+df = pd.read_csv("waze_data.csv")
+
+# Create the crosswalk DataFrame (using the previously defined crosswalk)
+crosswalk_data = {
+    'type': ['Accident', 'Accident', 'Construction', 'Hazard', 'Hazard', 'Hazard', 'Road_Closed', 'Road_Closed'],
+    'subtype': ['Major', 'Minor', 'Unclassified', 'Weather', 'Object', 'Debris', 'Unclassified', 'Road Closed'],
+    'updated_type': ['Accident', 'Accident', 'Construction', 'Hazard', 'Hazard', 'Hazard', 'Road Closed', 'Road Closed'],
+    'updated_subtype': ['Major', 'Minor', 'Unclassified', 'Weather', 'Object', 'Debris', 'Unclassified', 'Road Closed'],
+    'updated_subsubtype': [None, None, None, None, None, None, None, None]
+}
+
+crosswalk = pd.DataFrame(crosswalk_data)
+
+# Merge the crosswalk with the original data
+merged_df = df.merge(crosswalk, on=['type', 'subtype'], how='left')
+
+# Fill NA values in updated columns
+merged_df['updated_type'] = merged_df['updated_type'].fillna(merged_df['type'])
+merged_df['updated_subtype'] = merged_df['updated_subtype'].fillna('Unclassified')
+
+# Count rows for Accident - Unclassified
+accident_unclassified_count = merged_df[
+    (merged_df['updated_type'] == 'Accident') & 
+    (merged_df['updated_subtype'] == 'Unclassified')
+].shape[0]
+
+print(f"Number of rows for Accident - Unclassified: {accident_unclassified_count}")
+```
+
+4. 
+
+```{python}
+import pandas as pd
+import numpy as np
+
+# Load the original data
+df = pd.read_csv("waze_data.csv")
+
+# Create the crosswalk DataFrame
+crosswalk_data = {
+    'type': ['Accident', 'Accident', 'Construction', 'Hazard', 'Hazard', 'Hazard', 'Road_Closed', 'Road_Closed'],
+    'subtype': ['Major', 'Minor', 'Unclassified', 'Weather', 'Object', 'Debris', 'Unclassified', 'Road Closed'],
+    'updated_type': ['Accident', 'Accident', 'Construction', 'Hazard', 'Hazard', 'Hazard', 'Road Closed', 'Road Closed'],
+    'updated_subtype': ['Major', 'Minor', 'Unclassified', 'Weather', 'Object', 'Debris', 'Unclassified', 'Road Closed'],
+    'updated_subsubtype': [None, None, None, None, None, None, None, None]
+}
+
+crosswalk = pd.DataFrame(crosswalk_data)
+
+# Merge the crosswalk with the original data
+merged_df = df.merge(crosswalk, on=['type', 'subtype'], how='left')
+
+# Function to compare sets of values
+def compare_values(set1, set2, name):
+    if set1 == set2:
+        print(f"{name} values match between crosswalk and merged dataset.")
+    else:
+        print(f"{name} values do not match between crosswalk and merged dataset.")
+        print(f"Values in crosswalk but not in merged dataset: {set1 - set2}")
+        print(f"Values in merged dataset but not in crosswalk: {set2 - set1}")
+
+# Compare 'type' values
+crosswalk_types = set(crosswalk['type'])
+merged_types = set(merged_df['type'])
+compare_values(crosswalk_types, merged_types, "Type")
+
+# Compare 'subtype' values
+crosswalk_subtypes = set(crosswalk['subtype'])
+merged_subtypes = set(merged_df['subtype'].dropna())  # Drop NA values for comparison
+compare_values(crosswalk_subtypes, merged_subtypes, "Subtype")
+
+# Additional check for NA subtypes
+na_subtypes_count = merged_df['subtype'].isna().sum()
+print(f"\nNumber of NA subtypes in merged dataset: {na_subtypes_count}")
+
+# Check if all combinations in merged dataset exist in crosswalk
+merged_combinations = set(zip(merged_df['type'], merged_df['subtype'].fillna('Unclassified')))
+crosswalk_combinations = set(zip(crosswalk['type'], crosswalk['subtype']))
+
+if merged_combinations.issubset(crosswalk_combinations):
+    print("\nAll type-subtype combinations in the merged dataset exist in the crosswalk.")
+else:
+    print("\nSome type-subtype combinations in the merged dataset do not exist in the crosswalk:")
+    print(merged_combinations - crosswalk_combinations)
+```
+
+
+# App #1: Top Location by Alert Type Dashboard (30 points){-}
+
+1. 
+
+a. 
+```{python}
+import pandas as pd
+import re
+
+# Load the data
+df = pd.read_csv("waze_data.csv")
+
+# Function to extract coordinates
+def extract_coordinates(geo_string):
+    pattern = r'POINT\((-?\d+\.?\d*)\s+(-?\d+\.?\d*)\)'
+    match = re.search(pattern, geo_string)
+    if match:
+        return float(match.group(2)), float(match.group(1))  # Latitude, Longitude
+    return None, None
+
+# Apply the function to create new columns
+df['latitude'], df['longitude'] = zip(*df['geo'].apply(extract_coordinates))
+
+# Verify the new columns
+print(df[['geo', 'latitude', 'longitude']].head())
+```
+
+b. 
+```{python}
+import pandas as pd
+import numpy as np
+
+# Load the data (assuming you've already extracted latitude and longitude)
+df = pd.read_csv("waze_data.csv")
+
+# Function to extract coordinates (if not already done)
+def extract_coordinates(geo_string):
+    pattern = r'POINT\((-?\d+\.?\d*)\s+(-?\d+\.?\d*)\)'
+    match = re.search(pattern, geo_string)
+    if match:
+        return float(match.group(2)), float(match.group(1))  # Latitude, Longitude
+    return None, None
+
+# Apply the function to create new columns (if not already done)
+if 'latitude' not in df.columns or 'longitude' not in df.columns:
+    df['latitude'], df['longitude'] = zip(*df['geo'].apply(extract_coordinates))
+
+# Bin the latitude and longitude
+df['binned_lat'] = (df['latitude'] // 0.01) * 0.01
+df['binned_lon'] = (df['longitude'] // 0.01) * 0.01
+
+# Round to two decimal places for consistency
+df['binned_lat'] = df['binned_lat'].round(2)
+df['binned_lon'] = df['binned_lon'].round(2)
+
+# Group by binned coordinates and count occurrences
+grouped = df.groupby(['binned_lat', 'binned_lon']).size().reset_index(name='count')
+
+# Find the combination with the greatest number of observations
+max_combo = grouped.loc[grouped['count'].idxmax()]
+
+print("Binned latitude-longitude combination with the greatest number of observations:")
+print(f"Latitude: {max_combo['binned_lat']}")
+print(f"Longitude: {max_combo['binned_lon']}")
+print(f"Count: {max_combo['count']}")
+
+# Optional: Display the top 5 combinations
+print("\nTop 5 binned latitude-longitude combinations:")
+print(grouped.sort_values('count', ascending=False).head())
+```
+
+
+c. 
+```{python}
+import pandas as pd
+import numpy as np
+
+# Load the data 
+df = pd.read_csv("waze_data.csv")
+
+# Function to extract coordinates 
+def extract_coordinates(geo_string):
+    pattern = r'POINT\((-?\d+\.?\d*)\s+(-?\d+\.?\d*)\)'
+    match = re.search(pattern, geo_string)
+    if match:
+        return float(match.group(2)), float(match.group(1))  # Latitude, Longitude
+    return None, None
+
+# Apply the function to create new columns 
+if 'latitude' not in df.columns or 'longitude' not in df.columns:
+    df['latitude'], df['longitude'] = zip(*df['geo'].apply(extract_coordinates))
+
+# Bin the latitude and longitude 
+if 'binned_lat' not in df.columns or 'binned_lon' not in df.columns:
+    df['binned_lat'] = (df['latitude'] // 0.01) * 0.01
+    df['binned_lon'] = (df['longitude'] // 0.01) * 0.01
+    df['binned_lat'] = df['binned_lat'].round(2)
+    df['binned_lon'] = df['binned_lon'].round(2)
+
+# Collapse the data
+collapsed_df = df.groupby(['binned_lat', 'binned_lon', 'type', 'subtype']).size().reset_index(name='count')
+
+# Sort the data by count in descending order
+collapsed_df = collapsed_df.sort_values('count', ascending=False)
+
+# Save the DataFrame as top_alerts_map.csv
+collapsed_df.to_csv('top_alerts_map/top_alerts_map.csv', index=False)
+
+# Print information about the DataFrame
+print(f"Level of aggregation: binned_lat, binned_lon, type, subtype")
+print(f"Number of rows in the DataFrame: {len(collapsed_df)}")
+
+# Optional: Display the first few rows of the DataFrame
+print("\nFirst few rows of the collapsed DataFrame:")
+print(collapsed_df.head())
+```
+
+2.  
+```{python}
+import pandas as pd
+import altair as alt
+
+# Load the data
+df = pd.read_csv('top_alerts_map/top_alerts_map.csv')
+
+# Filter for "Jam - Heavy Traffic" alerts and get the top 10
+jam_heavy_traffic = df[(df['type'] == 'JAM') & (df['subtype'] == 'JAM_HEAVY_TRAFFIC')]
+top_10 = jam_heavy_traffic.nlargest(10, 'count')
+
+# Create the scatter plot
+chart = alt.Chart(top_10).mark_circle().encode(
+    x=alt.X('binned_lon:Q', title='Longitude', scale=alt.Scale(domain=[top_10['binned_lon'].min() - 0.01, top_10['binned_lon'].max() + 0.01])),
+    y=alt.Y('binned_lat:Q', title='Latitude', scale=alt.Scale(domain=[top_10['binned_lat'].min() - 0.01, top_10['binned_lat'].max() + 0.01])),
+    size=alt.Size('count:Q', title='Number of Alerts'),
+    tooltip=['binned_lon', 'binned_lat', 'count']
+).properties(
+    title='Top 10 Locations for Jam - Heavy Traffic Alerts',
+    width=600,
+    height=400
+)
+
+# Display the chart
+chart.show()
+```
+
+3. 
+    
+a. 
+
+```{python}
+import requests
+import json
+
+# URL for the neighborhood boundaries GeoJSON
+url = 'https://data.cityofchicago.org/api/geospatial/9y82-ww7h?method=export&format=GeoJSON'
+
+# Send a GET request to download the GeoJSON
+response = requests.get(url)
+
+# Save the GeoJSON file
+file_path = 'top_alerts_map/chicago_neighborhoods.geojson'
+with open(file_path, 'wb') as file:
+    file.write(response.content)
+
+# Load the GeoJSON file
+with open(file_path) as f:
+    chicago_geojson = json.load(f)
+```
+    
+
+b. 
+```{python}
+import pandas as pd
+import altair as alt
+import json
+
+# Load the GeoJSON file
+file_path = "C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map/chicago_neighborhoods.geojson"
+with open(file_path) as f:
+    chicago_geojson = json.load(f)
+
+# Inspect the structure of the GeoJSON
+print("Keys in chicago_geojson:", chicago_geojson.keys())
+
+# Adjust this line based on the actual structure of your GeoJSON
+geo_data = alt.Data(values=chicago_geojson.get("features") or chicago_geojson.get("data") or chicago_geojson)
+
+# Load the top alerts data
+df = pd.read_csv('top_alerts_map/top_alerts_map.csv')
+
+# Filter for "Jam - Heavy Traffic" alerts and get the top 10
+jam_heavy_traffic = df[(df['type'] == 'JAM') & (df['subtype'] == 'JAM_HEAVY_TRAFFIC')]
+top_10 = jam_heavy_traffic.nlargest(10, 'count')
+
+# Create the base map layer
+base_map = alt.Chart(geo_data).mark_geoshape(
+    fill='lightgray',
+    stroke='white'
+).encode(
+).properties(
+    width=600,
+    height=400
+)
+
+# Create the scatter plot layer
+points = alt.Chart(top_10).mark_circle().encode(
+    longitude='binned_lon:Q',
+    latitude='binned_lat:Q',
+    size=alt.Size('count:Q', title='Number of Alerts', scale=alt.Scale(range=[100, 1000])),
+    color=alt.value('teal'),
+    tooltip=['binned_lon', 'binned_lat', 'count']
+)
+
+# Combine the layers
+final_chart = alt.layer(base_map, points).properties(
+    title='Top 10 Locations for Jam - Heavy Traffic Alerts in Chicago'
+).project(
+    type='equirectangular',
+    scale=60000,
+    center=[-87.65, 41.88]  # Approximate center of Chicago
+)
+
+# Display the chart
+final_chart.show()
+```
+
+4. 
+
+```{python}
+import pandas as pd
+import altair as alt
+import json
+
+# Load the GeoJSON file
+file_path = "C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map/chicago_neighborhoods.geojson"
+with open(file_path) as f:
+    chicago_geojson = json.load(f)
+
+# Prepare the GeoJSON data for Altair
+geo_data = alt.Data(values=chicago_geojson.get("features") or chicago_geojson.get("data") or chicago_geojson)
+
+# Load the top alerts data
+df = pd.read_csv('top_alerts_map/top_alerts_map.csv')
+
+# Filter for "Jam - Heavy Traffic" alerts and get the top 10
+jam_heavy_traffic = df[(df['type'] == 'JAM') & (df['subtype'] == 'JAM_HEAVY_TRAFFIC')]
+top_10 = jam_heavy_traffic.nlargest(10, 'count')
+
+# Calculate the bounding box for Chicago
+lon_min, lon_max = top_10['binned_lon'].min(), top_10['binned_lon'].max()
+lat_min, lat_max = top_10['binned_lat'].min(), top_10['binned_lat'].max()
+
+# Add some padding to the bounding box
+padding = 0.05
+lon_min -= padding
+lon_max += padding
+lat_min -= padding
+lat_max += padding
+
+# Create the base map layer
+base_map = alt.Chart(geo_data).mark_geoshape(
+    fill='lightgray',
+    stroke='white',
+    opacity=0.5  # Make the map fill slightly transparent
+).properties(
+    width=600,
+    height=400
+)
+
+# Create the scatter plot layer
+points = alt.Chart(top_10).mark_circle().encode(
+    x=alt.X('binned_lon:Q', scale=alt.Scale(domain=[lon_min, lon_max])),
+    y=alt.Y('binned_lat:Q', scale=alt.Scale(domain=[lat_min, lat_max])),
+    size=alt.Size('count:Q', title='Number of Alerts', scale=alt.Scale(range=[100, 1000])),
+    color=alt.value('orange'),
+    tooltip=['binned_lon', 'binned_lat', 'count']
+)
+
+# Combine the layers
+final_chart = (base_map + points).properties(
+    title='Top 10 Locations for Jam - Heavy Traffic Alerts in Chicago'
+).project(
+    type='mercator',
+    scale=80000,
+    center=[(lon_min + lon_max) / 2, (lat_min + lat_max) / 2]  # Center based on data
+)
+
+# Display the chart
+final_chart.show()
+```
+
+5. 
+
+a. 
+
+```{python}
+!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map\basic-app\Screenshot 2024-11-22 131331.png")
+```
+
+b. 
+```{python}
+!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map\basic-app\Jam Heavy Traffic.png")
+```
+
+c. 
+Road closures due to events are most common in western Chicago, with additional significant clusters near the lakefront and northeastern areas
+```{python}
+!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map\basic-app\Road Closed Event.png")
+```
+
+d. 
+Question: "Where are the most frequent pothole hazards reported in Chicago, and what areas show the highest concentration of pothole alerts?"
+
+Looking at the map displaying HAZARD - HAZARD_ON_ROAD_POT_HOLE alerts, we can provide the following analysis:
+
+The map reveals several key insights about pothole hazards in Chicago:
+- The largest concentrations appear in the central-west and south-west regions of the city
+- There are multiple significant clusters in the mid-section of Chicago, with circles indicating 300-400 alerts in these areas
+- The northern and southern parts of the city show scattered but notable pothole reports
+- The distribution suggests that certain arterial roads or high-traffic areas experience more frequent pothole issues
+
+This information could be valuable for:
+- City maintenance departments prioritizing road repairs
+- Drivers planning their routes to avoid problematic areas
+- Infrastructure planning and budget allocation
+- Understanding patterns of road deterioration across different neighborhoods
+
+```{python}
+!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map\basic-app\Hazard Pot Hole.png")
+```
+
+e. 
+
+I can suggest adding a "Time" column to enhance the dashboard analysis. Here's why and how it would be beneficial:
+
+Currently, the dashboard shows spatial distribution of alerts (locations and frequencies) but lacks temporal context
+
+We can add a date/time filter dropdown or slider
+
+Allow users to select specific:
+Time of day (morning/afternoon/evening/night)
+Day of week
+Month or season
+Year
+
+Benefits:
+Enable comparison between different time periods
+Help city planners better allocate resources based on temporal trends
+
+
+# App #2: Top Location by Alert Type and Hour Dashboard (20 points) {-}
+
+1. 
+
+a. 
+No, it would not be a good idea to collapse the dataset by the exact timestamp ('ts' column) because:
+- Timestamps contain very specific time information (down to seconds), making the data too granular if collapsed this way
+- We only need hourly patterns for our analysis, not second-by-second data
+- Grouping by exact timestamps would fragment the data too much, making it difficult to identify meaningful hourly patterns
+- Instead, we should extract just the hour component from the timestamp for more meaningful aggregation and analysis
+- This approach will provide better insights into traffic patterns while maintaining statistical significance in our findings.
+
+
+    
+b. 
+```{python}
+import pandas as pd
+
+# Read the original dataset
+df = pd.read_csv('C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/waze_data.csv')
+
+# Convert timestamp to datetime and extract hour
+df['ts'] = pd.to_datetime(df['ts'])
+df['hour'] = df['ts'].dt.strftime('%H:00')
+
+# Extract coordinates from geoWKT column
+# Format is Point(-87.676685 41.929692)
+df['coordinates'] = df['geoWKT'].str.extract(r'\((.*?)\)')
+df[['lon', 'lat']] = df['coordinates'].str.split(' ', expand=True).astype(float)
+
+# Create binned coordinates
+df['binned_lat'] = df['lat'].round(3)
+df['binned_lon'] = df['lon'].round(3)
+
+# Add count column for aggregation
+df['count'] = 1
+
+# Group by hour, type, subtype, and location
+collapsed_df = df.groupby(['hour', 'type', 'subtype', 'binned_lat', 'binned_lon'])['count'].sum().reset_index()
+
+# Save the new dataset
+output_path = 'C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/top_alerts_map_byhour.csv'
+collapsed_df.to_csv(output_path, index=False)
+
+# Print the number of rows
+print(f"Number of rows in the new dataset: {len(collapsed_df)}")
+```
+
+c.
+
+```{python}
+import pandas as pd
+import altair as alt
+import json
+
+# Load the hourly data
+df = pd.read_csv('C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/top_alerts_map_byhour.csv')
+
+# Load the GeoJSON for the map layer
+geojson_path = "C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour/Boundaries - Neighborhoods.geojson"
+with open(geojson_path, 'r') as f:
+    chicago_geojson = json.load(f)
+
+# Select three different times (morning rush hour, midday, evening rush hour)
+selected_hours = ['08:00', '12:00', '17:00']
+
+# Create base map layer
+base_map = alt.Chart(alt.Data(values=chicago_geojson['features'])).mark_geoshape(
+    fill='lightgray',
+    stroke='white'
+).properties(
+    width=600,
+    height=400
+)
+
+# Create three plots
+for hour in selected_hours:
+    # Filter data for heavy traffic jams at specific hour
+    filtered_df = df[
+        (df['type'] == 'JAM') & 
+        (df['subtype'] == 'JAM_HEAVY_TRAFFIC') & 
+        (df['hour'] == hour)
+    ].nlargest(10, 'count')
+    
+    # Create points layer
+    points = alt.Chart(filtered_df).mark_circle().encode(
+        longitude='binned_lon:Q',
+        latitude='binned_lat:Q',
+        size=alt.Size('count:Q', title='Number of Alerts', 
+                     scale=alt.Scale(range=[100, 1000])),
+        color=alt.value('teal'),
+        tooltip=['binned_lon', 'binned_lat', 'count']
+    )
+    
+    # Combine layers
+    final_chart = (base_map + points).properties(
+        title=f'Top 10 Locations for Heavy Traffic Jams at {hour}'
+    ).project(
+        type='mercator',
+        scale=80000,
+        center=[-87.65, 41.88]  # Chicago's approximate center
+    )
+    
+    # Set the output directory path
+    output_dir = 'C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour'
+
+    # Save each plot with the full path 
+    final_chart.save(f'{output_dir}/jam_traffic_{hour.replace(":", "")}.png')
+   
+```
+    
+
+2.
+
+a. 
+```{python}
+!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour\basic-app\App 2 UI.png")
+```
+
+b. 
+```{python}
+!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour\basic-app\jam_traffic_0800_app.png")
+
+!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour\basic-app\jam_traffic_1200_app.png")
+
+!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour\basic-app\jam_traffic_1700_app.png")
+```
+
+
+c. 
+The pattern suggests that road construction work is preferentially scheduled during nighttime hours (22:00), likely to minimize traffic disruption during peak daytime hours. The night construction pattern shows both more locations and higher intensity of construction activity compared to the early morning hours.
+
+```{python}
+!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour\basic-app\road_construction_0600.png")
+
+!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour\basic-app\road_construction_2200.png")
+```
+
+
+# App #3: Top Location by Alert Type and Hour Dashboard (20 points){-}
+
+1. 
+a. 
+No, it would not be a good idea to collapse the dataset by range of hours because:
+- Users need flexibility to select any custom hour range (e.g., 6AM-10AM)
+- Pre-collapsing by specific ranges would limit this flexibility
+- We can use the existing hourly-aggregated dataset and sum the counts dynamically based on the user's selected range
+- This approach maintains data granularity while still being efficient for the app
+
+b. 
+
+```{python}
+import pandas as pd
+import altair as alt
+import json
+
+# Load the hourly data
+df = pd.read_csv('C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/top_alerts_map_byhour.csv')
+
+# Load GeoJSON for Chicago map
+with open('C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/Boundaries - Neighborhoods.geojson', 'r') as f:
+    chicago_geojson = json.load(f)
+
+# Filter data for heavy traffic jams between 6AM-9AM
+filtered_df = df[
+    (df['type'] == 'JAM') & 
+    (df['subtype'] == 'JAM_HEAVY_TRAFFIC') & 
+    (df['hour'].isin(['06:00', '07:00', '08:00', '09:00']))
+].groupby(['binned_lat', 'binned_lon'])['count'].sum().reset_index()
+
+# Get top 10 locations
+top_10_locations = filtered_df.nlargest(10, 'count')
+
+# Create base map
+base_map = alt.Chart(alt.Data(values=chicago_geojson['features'])).mark_geoshape(
+    fill='lightgray',
+    stroke='white'
+).properties(
+    width=600,
+    height=400
+)
+
+# Add points for top 10 locations
+points = alt.Chart(top_10_locations).mark_circle().encode(
+    longitude='binned_lon:Q',
+    latitude='binned_lat:Q',
+    size=alt.Size('count:Q', title='Number of Alerts', scale=alt.Scale(range=[100, 1000])),
+    color=alt.value('teal'),
+    tooltip=['binned_lon', 'binned_lat', 'count']
+).properties(
+    title='Top 10 Locations for Heavy Traffic Jams (6AM-9AM)'
+).project(
+    type='mercator',
+    scale=80000,
+    center=[-87.65, 41.88]
+)
+
+# Combine layers and save
+final_chart = (base_map + points)
+output_path = 'C:/Users/Shreya Work/OneDrive/Documents/GitHub/student30538/problem_sets/ps6/top_alerts_map_byhour_sliderrange/morning_traffic_jams.png'
+final_chart.save(output_path)
+```
+
+2. 
+
+a. 
+
+```{python}
+!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour_sliderrange\basic-app\app 3 ui.png")
+```
+
+b. 
+```{python}
+!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour_sliderrange\basic-app\morning_traffic_jams_app.png")
+```
+
+3. 
+
+a. 
+
+The possible values for input.switch_button() in your server function would be:
+True: When user toggles to range of hours mode
+False: When user keeps single hour selection mode
+
+## App with Hour Range Selection
+
+```{python}
+# Create directory for the new app
+import os
+dir_path = 'top_alerts_map_byhour_sliderrange'
+os.makedirs(dir_path, exist_ok=True)
+```
+
+    
+
+b. 
+```{python}
+!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour_sliderrange\basic-app\toggle off.png")
+
+!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour_sliderrange\basic-app\toggle on.png")
+```
+
+
+c. 
+
+```{python}
+!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour_sliderrange\basic-app\toggle off.png")
+
+!("C:\Users\Shreya Work\OneDrive\Documents\GitHub\student30538\problem_sets\ps6\top_alerts_map_byhour_sliderrange\basic-app\toggle on.png")
+```
+
+
+d.
+
+To achieve this visualization, the app would need these changes:
+- Add a grid overlay with latitude/longitude coordinates
+- Color-code points by time period (red for morning, blue for afternoon)
+- Add a dual legend showing:
+    - Time periods (Morning/Afternoon)
+- Circle sizes representing number of alerts
+- Replace the hour selection with a morning/afternoon toggle
+- Allow both time periods to be displayed simultaneously on the same map
+
+These modifications would enable comparison of alert patterns between different times of day.
